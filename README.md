@@ -77,7 +77,6 @@ Dự án dùng MoMo Sandbox. Các khóa cấu hình không đặt trực tiếp 
 - `MOMO_ACCESS_KEY`
 - `MOMO_SECRET_KEY`
 
-Không đưa file `.env` lên GitHub vì file này chứa thông tin nhạy cảm.
 
 ## Tài khoản và quyền quản trị
 
@@ -99,31 +98,4 @@ config/         Cấu hình kết nối DB và đọc biến môi trường
 includes/       Header, footer, kiểm tra đăng nhập và thành phần dùng chung
 database.sql    Cấu trúc database và dữ liệu mẫu
 .env.example    File mẫu cấu hình môi trường
-```
-
-## Lưu ý khi đưa lên GitHub
-
-Các file không nên đưa lên GitHub:
-
-- `.env`
-- `sess_*`
-- file log
-- mật khẩu database thật
-- khóa MoMo thật
-- dữ liệu cá nhân hoặc dữ liệu thanh toán thật
-
-File `.gitignore` đã được tạo để tự bỏ qua các file nhạy cảm phổ biến.
-
-## Kiểm tra nhanh
-
-Có thể kiểm tra cú pháp PHP bằng lệnh:
-
-```powershell
-C:\xampp\php\php.exe -l ten_file.php
-```
-
-Ví dụ:
-
-```powershell
-C:\xampp\php\php.exe -l config\db.php
 ```
