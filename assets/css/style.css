@@ -148,7 +148,6 @@ header.scrolled {
     gap: 16px;
 }
 
-
 .icon-btn {
     background: none;
     border: none;
@@ -161,6 +160,10 @@ header.scrolled {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.mobile-menu-toggle {
+    display: none;
 }
 
 .icon-btn:hover {
@@ -1184,7 +1187,7 @@ footer {
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+    grid-template-columns: 1.8fr 1fr 1.35fr 1.45fr;
     gap: 48px;
     margin-bottom: 60px;
 }
@@ -1267,8 +1270,53 @@ footer {
     .hero-title {
         font-size: 36px;
     }
+    .navbar-container {
+        position: relative;
+        padding: 0 14px;
+        gap: 10px;
+    }
+    .logo {
+        font-size: 20px;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+    .logo svg {
+        width: 28px !important;
+        height: 28px !important;
+    }
     .nav-links {
         display: none;
+        position: fixed;
+        top: 80px;
+        left: 12px;
+        right: 12px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        box-shadow: var(--shadow-lg);
+        padding: 10px;
+        z-index: 1001;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .nav-links.open {
+        display: flex;
+    }
+    .nav-links a {
+        display: block;
+        width: 100%;
+        padding: 12px 14px;
+    }
+    .mobile-menu-toggle {
+        display: flex;
+    }
+    .nav-actions {
+        gap: 6px;
+        margin-left: auto;
+    }
+    .nav-actions .btn {
+        padding: 8px 10px !important;
+        font-size: 12px !important;
     }
     .notification-dropdown {
         position: fixed;

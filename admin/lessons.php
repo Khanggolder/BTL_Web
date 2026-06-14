@@ -11,6 +11,12 @@ $selected_course_id = intval($_GET['course_id'] ?? 0);
 $search = trim($_GET['search'] ?? '');
 $category_filter = trim($_GET['category'] ?? 'all');
 $level_filter = trim($_GET['level'] ?? 'all');
+$level_labels = [
+    'all' => 'Tất cả cấp độ',
+    'BEGINNER' => 'Cơ bản',
+    'INTERMEDIATE' => 'Trung cấp',
+    'ADVANCED' => 'Nâng cao',
+];
 
 $success_msg = '';
 $error_msg = '';
@@ -454,7 +460,7 @@ if (isset($_GET['success'])) {
                                         <tr style="border-bottom: 1px solid var(--border); font-weight: 500;">
                                             <td style="padding: 12px 16px;"><strong><?php echo htmlspecialchars($course_option['title']); ?></strong></td>
                                             <td style="padding: 12px 16px; color: var(--text-muted);"><?php echo htmlspecialchars($course_option['category']); ?></td>
-                                            <td style="padding: 12px 16px; color: var(--text-muted);"><?php echo htmlspecialchars($course_option['level']); ?></td>
+                                            <td style="padding: 12px 16px; color: var(--text-muted);"><?php echo htmlspecialchars($level_labels[$course_option['level']] ?? $course_option['level']); ?></td>
                                             <td style="padding: 12px 16px; text-align: center;">
                                                 <a href="lessons.php?course_id=<?php echo $course_option['id']; ?>&search=<?php echo urlencode($search); ?>&category=<?php echo urlencode($category_filter); ?>&level=<?php echo urlencode($level_filter); ?>" class="btn btn-primary" style="height: 32px; padding: 6px 12px; font-size: 12px; border-radius: 4px;">Xem bài giảng</a>
                                             </td>
@@ -486,12 +492,12 @@ if (isset($_GET['success'])) {
                             <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
                                 <thead>
                                     <tr style="border-bottom: 1px solid var(--border); font-weight: 700; color: var(--text-main); background-color: var(--bg-main);">
-                                        <th style="padding: 12px 16px; width: 80px;">Thứ tự</th>
+                                        <th style="padding: 12px 16px; width: 80px; text-align: center;">Thứ tự</th>
                                         <th style="padding: 12px 16px;">Tên bài học</th>
                                         <th style="padding: 12px 16px;">Khóa học</th>
                                         <th style="padding: 12px 16px;">Danh mục</th>
                                         <th style="padding: 12px 16px;">Cấp độ</th>
-                                        <th style="padding: 12px 16px;">Thời lượng</th>
+                                        <th style="padding: 12px 16px; white-space: nowrap; min-width: 96px;">Thời lượng</th>
                                         <th style="padding: 12px 16px;">Đường dẫn Video</th>
                                         <th style="padding: 12px 16px;">Học thử</th>
                                         <th style="padding: 12px 16px; text-align: center;">Thao tác</th>
@@ -500,20 +506,20 @@ if (isset($_GET['success'])) {
                                 <tbody>
                                     <?php foreach ($lessons as $l): ?>
                                         <tr style="border-bottom: 1px solid var(--border); font-weight: 500;">
-                                            <td style="padding: 12px 16px; font-weight: 800; color: var(--primary);">Bài <?php echo htmlspecialchars($l['order_index']); ?></td>
+                                            <td style="padding: 12px 16px; font-weight: 800; color: var(--primary); text-align: center;"><?php echo htmlspecialchars($l['order_index']); ?></td>
                                             <td style="padding: 12px 16px;"><strong><?php echo htmlspecialchars($l['title']); ?></strong></td>
                                             <td style="padding: 12px 16px;"><a href="courses.php?action=view&id=<?php echo $l['course_id']; ?>" style="color: var(--primary); font-weight: 700;"><?php echo htmlspecialchars($l['course_title']); ?></a></td>
                                             <td style="padding: 12px 16px; color: var(--text-muted);"><?php echo htmlspecialchars($l['category']); ?></td>
-                                            <td style="padding: 12px 16px; color: var(--text-muted);"><?php echo htmlspecialchars($l['level']); ?></td>
-                                            <td style="padding: 12px 16px; font-weight: 700; color: var(--text-main);"><?php echo htmlspecialchars($l['duration']); ?> phút</td>
+                                            <td style="padding: 12px 16px; color: var(--text-muted);"><?php echo htmlspecialchars($level_labels[$l['level']] ?? $l['level']); ?></td>
+                                            <td style="padding: 12px 16px; font-weight: 700; color: var(--text-main); white-space: nowrap;"><?php echo htmlspecialchars($l['duration']); ?> phút</td>
                                             <td style="padding: 12px 16px; color: var(--text-muted); font-size: 12px; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="<?php echo htmlspecialchars($l['video_url']); ?>">
                                                 <?php echo htmlspecialchars($l['video_url']); ?>
                                             </td>
                                             <td style="padding: 12px 16px;">
                                                 <?php 
                                                     echo $l['is_free'] == 1 
-                                                        ? '<span style="background-color:#d1fae5;color:var(--success);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">Học thử (Free)</span>' 
-                                                        : '<span style="background-color:#f1f5f9;color:var(--text-muted);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">Bảo mật</span>';
+                                                        ? '<span style="background-color:#d1fae5;color:var(--success);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;">Học thử (Free)</span>' 
+                                                        : '<span style="background-color:#f1f5f9;color:var(--text-muted);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;">Bảo mật</span>';
                                                 ?>
                                             </td>
                                             <td style="padding: 12px 16px; text-align: center; display: flex; gap: 8px; justify-content: center;">
@@ -571,13 +577,37 @@ if (isset($_GET['success'])) {
                         <?php else: ?>
                             <div class="form-group" style="margin-bottom: 20px;">
                                 <label for="course_id">Thuộc khóa học <span style="color: var(--danger);">*</span></label>
-                                <select name="course_id" id="course_id" class="form-control" required style="height: 44px;">
+                                <?php
+                                    $selected_form_course_title = 'Chọn khóa học';
+                                    foreach ($all_courses as $ac) {
+                                        $current_course_value = $selected_course_id ?: (int) ($lesson_data['course_id'] ?? 0);
+                                        if ((int) $ac['id'] === $current_course_value) {
+                                            $selected_form_course_title = $ac['title'];
+                                            break;
+                                        }
+                                    }
+                                ?>
+                                <select name="course_id" id="course_id" class="form-control admin-native-filter lesson-course-native-select" required style="min-height: 48px; height: auto; line-height: 1.35; padding-top: 10px; padding-bottom: 10px;">
                                     <?php foreach ($all_courses as $ac): ?>
-                                        <option value="<?php echo $ac['id']; ?>" <?php echo $selected_course_id === (int) $ac['id'] ? 'selected' : ''; ?>>
+                                        <option value="<?php echo $ac['id']; ?>" <?php echo ($selected_course_id ?: (int) ($lesson_data['course_id'] ?? 0)) === (int) $ac['id'] ? 'selected' : ''; ?>>
                                             <?php echo htmlspecialchars($ac['title']); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
+                                <div class="admin-custom-select lesson-course-custom-select" data-admin-select>
+                                    <input type="hidden" name="course_id" value="<?php echo htmlspecialchars((string) ($selected_course_id ?: (int) ($lesson_data['course_id'] ?? 0))); ?>" disabled>
+                                    <button type="button" class="admin-custom-select-toggle" aria-expanded="false">
+                                        <span><?php echo htmlspecialchars($selected_form_course_title); ?></span>
+                                        <i data-lucide="chevron-down"></i>
+                                    </button>
+                                    <div class="admin-custom-select-menu">
+                                        <?php foreach ($all_courses as $ac): ?>
+                                            <button type="button" data-value="<?php echo htmlspecialchars((string) $ac['id']); ?>" class="<?php echo ($selected_course_id ?: (int) ($lesson_data['course_id'] ?? 0)) === (int) $ac['id'] ? 'is-selected' : ''; ?>">
+                                                <?php echo htmlspecialchars($ac['title']); ?>
+                                            </button>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
                             </div>
                         <?php endif; ?>
 
@@ -605,7 +635,7 @@ if (isset($_GET['success'])) {
 
                         <div class="form-group" style="margin-bottom: 20px;">
                             <label for="video_url">Đường dẫn tệp Video phát giảng dạy (URL)</label>
-                            <input type="text" id="video_url" name="video_url" class="form-control" value="<?php echo htmlspecialchars($lesson_data['video_url'] ?? 'https://www.w3schools.com/html/mov_bbb.mp4'); ?>" required placeholder="https:
+                            <input type="text" id="video_url" name="video_url" class="form-control" value="<?php echo htmlspecialchars($lesson_data['video_url'] ?? 'https://www.w3schools.com/html/mov_bbb.mp4'); ?>" required placeholder="https://example.com/video.mp4">
                         </div>
 
                         <div class="form-group" style="margin-bottom: 30px; display: flex; align-items: center; gap: 8px;">

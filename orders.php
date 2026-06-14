@@ -124,7 +124,7 @@ require_once __DIR__ . '/includes/header.php';
 
                         
                         <div id="items-<?php echo $order['id']; ?>" style="display: none; background-color: var(--bg-main); border-top: 1px solid var(--border); padding: 20px 24px;">
-                            <h4 style="font-size: 14px; font-weight: 800; color: var(--text-main); margin-bottom: 12px;">Các khóa học đã đặt sắm:</h4>
+                            <h4 style="font-size: 14px; font-weight: 800; color: var(--text-main); margin-bottom: 12px;">Các khóa học đã đặt:</h4>
                             
                             <?php
                                 
@@ -139,9 +139,9 @@ require_once __DIR__ . '/includes/header.php';
 
                             <div style="display: flex; flex-direction: column; gap: 10px;">
                                 <?php foreach ($items as $item): ?>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; background-color: white; border: 1px solid var(--border); padding: 12px 16px; border-radius: var(--radius-sm);">
-                                        <span style="font-weight: 700; font-size: 13px; color: var(--text-main);"><?php echo htmlspecialchars($item['course_name']); ?></span>
-                                        <span style="font-weight: 700; color: var(--primary); font-size: 13px;"><?php echo number_format($item['price'], 0, ',', '.'); ?>đ</span>
+                                    <div class="order-item-row" style="display: flex; justify-content: space-between; align-items: center; background-color: white; border: 1px solid var(--border); padding: 12px 16px; border-radius: var(--radius-sm);">
+                                        <span class="order-item-name" style="font-weight: 700; font-size: 13px; color: var(--text-main);"><?php echo htmlspecialchars($item['course_name']); ?></span>
+                                        <span class="order-item-price" style="font-weight: 700; color: var(--primary); font-size: 13px;"><?php echo number_format($item['price'], 0, ',', '.'); ?>đ</span>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
@@ -155,6 +155,25 @@ require_once __DIR__ . '/includes/header.php';
 
     </div>
 </div>
+
+<style>
+    @media (max-width: 576px) {
+        .order-item-row {
+            align-items: flex-start !important;
+            flex-direction: column !important;
+            gap: 8px !important;
+        }
+
+        .order-item-name {
+            line-height: 1.45 !important;
+        }
+
+        .order-item-price {
+            align-self: flex-end !important;
+            white-space: nowrap !important;
+        }
+    }
+</style>
 
 <script>
     

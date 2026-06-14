@@ -73,6 +73,9 @@ function is_active($page_name) {
 
             
             <div class="nav-actions">
+                <button class="icon-btn mobile-menu-toggle" id="mobile-menu-toggle" type="button" title="Menu" aria-label="Mở menu" aria-expanded="false">
+                    <i data-lucide="menu"></i>
+                </button>
                 
                 
                 <button class="icon-btn" id="search-toggle-btn" title="Tìm kiếm">

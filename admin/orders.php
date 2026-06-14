@@ -20,6 +20,11 @@ $payment_methods = [
     'VNPAY' => 'VNPay',
     'CREDIT_CARD' => 'Thẻ tín dụng',
 ];
+$order_status_labels = [
+    'PENDING' => 'Chờ duyệt',
+    'COMPLETED' => 'Hoàn tất',
+    'CANCELLED' => 'Đã hủy',
+];
 
 function enroll_order_courses($pdo, $order_id) {
     $stmt = $pdo->prepare("SELECT user_id FROM orders WHERE id = ?");
@@ -337,7 +342,7 @@ if ($action === 'list') {
                         </div>
                         <div style="text-align: right;">
                             <div style="font-size: 26px; font-weight: 800; color: var(--text-main);"><?php echo number_format($order_data['total_amount'], 0, ',', '.'); ?>đ</div>
-                            <span style="color: var(--text-muted);"><?php echo htmlspecialchars($order_data['status']); ?> · <?php echo htmlspecialchars($order_data['payment_method']); ?></span>
+                            <span style="color: var(--text-muted);"><?php echo htmlspecialchars($order_status_labels[$order_data['status']] ?? $order_data['status']); ?> · <?php echo htmlspecialchars($payment_methods[$order_data['payment_method']] ?? $order_data['payment_method']); ?></span>
                         </div>
                     </div>
                     <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px;">
@@ -399,7 +404,7 @@ if ($action === 'list') {
                         <div class="form-group" style="margin-bottom:20px;">
                             <label for="status">Trạng thái</label>
                             <select class="form-control" id="status" name="status">
-                                <?php foreach (['PENDING' => 'Đang chờ', 'COMPLETED' => 'Hoàn tất', 'CANCELLED' => 'Đã hủy'] as $value => $label): ?>
+                                <?php foreach ($order_status_labels as $value => $label): ?>
                                     <option value="<?php echo $value; ?>" <?php echo ($order_data['status'] ?? 'PENDING') === $value ? 'selected' : ''; ?>><?php echo $label; ?></option>
                                 <?php endforeach; ?>
                             </select>
@@ -423,7 +428,7 @@ if ($action === 'list') {
 
             <?php if ($action === 'list'): ?>
                 <div style="margin-bottom:24px;display:flex;gap:8px;flex-wrap:wrap;">
-                    <?php foreach (['all' => 'Tất cả', 'PENDING' => 'Chờ duyệt', 'COMPLETED' => 'Hoàn tất', 'CANCELLED' => 'Đã hủy'] as $value => $label): ?>
+                    <?php foreach (['all' => 'Tất cả'] + $order_status_labels as $value => $label): ?>
                         <a href="orders.php?status=<?php echo $value; ?>&search=<?php echo urlencode($search); ?>" class="btn" style="padding:6px 14px;font-size:13px;border-radius:99px;font-weight:600;<?php echo $status_filter === $value ? 'background-color:var(--primary);color:white;' : 'background-color:#e2e8f0;color:var(--text-main);'; ?>"><?php echo $label; ?></a>
                     <?php endforeach; ?>
                 </div>
@@ -468,7 +473,7 @@ if ($action === 'list') {
                                         <td style="padding:12px 16px;"><strong><?php echo htmlspecialchars($o['full_name']); ?></strong><br><span style="font-size:12px;color:var(--text-muted);"><?php echo htmlspecialchars($o['email']); ?></span></td>
                                         <td style="padding:12px 16px;font-weight:800;"><?php echo number_format($o['total_amount'], 0, ',', '.'); ?>d</td>
                                         <td style="padding:12px 16px;"><?php echo htmlspecialchars($payment_methods[$o['payment_method']] ?? $o['payment_method']); ?></td>
-                                        <td style="padding:12px 16px;"><?php echo htmlspecialchars($o['status']); ?></td>
+                                        <td style="padding:12px 16px;"><?php echo htmlspecialchars($order_status_labels[$o['status']] ?? $o['status']); ?></td>
                                         <td style="padding:12px 16px;text-align:center;">
                                             <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
                                                 <?php if ($o['status'] === 'PENDING'): ?>

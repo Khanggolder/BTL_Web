@@ -74,6 +74,25 @@
         
         const searchBtn = document.getElementById('search-toggle-btn');
         const searchDropdown = document.getElementById('search-dropdown-wrapper');
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileNavLinks = document.querySelector('.nav-links');
+        
+        if (mobileMenuToggle && mobileNavLinks) {
+            mobileMenuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isOpen = mobileNavLinks.classList.toggle('open');
+                mobileMenuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            });
+
+            mobileNavLinks.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            document.addEventListener('click', function() {
+                mobileNavLinks.classList.remove('open');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+            });
+        }
         
         if (searchBtn && searchDropdown) {
             searchBtn.addEventListener('click', function(e) {

@@ -290,6 +290,10 @@
     line-height: 1.4 !important;
 }
 
+.lesson-course-custom-select {
+    display: none;
+}
+
 @media (max-width: 768px) {
     .form-grid {
         grid-template-columns: 1fr;
@@ -530,12 +534,28 @@
         display: none !important;
     }
 
+    .lesson-course-native-select {
+        display: none !important;
+    }
+
+    .lesson-course-custom-select {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
     .admin-custom-select-menu {
         position: static !important;
         width: 100% !important;
-        max-height: none !important;
+        max-height: 168px !important;
+        overflow-y: auto !important;
         margin-top: 6px !important;
         box-shadow: none !important;
+    }
+
+    .lesson-course-custom-select .admin-custom-select-menu {
+        max-height: 132px !important;
+        overflow-y: auto !important;
     }
 
     .admin-table-card form[method="GET"] .btn,
@@ -646,6 +666,24 @@
 
     .admin-container select option {
         font-size: 12.5px !important;
+    }
+
+    .admin-users-page-header {
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+
+    .admin-users-page-header > div {
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+    }
+
+    .admin-users-page-title {
+        white-space: nowrap !important;
+        overflow-wrap: normal !important;
+        word-break: normal !important;
+        font-size: clamp(21px, 6vw, 26px) !important;
+        line-height: 1.15 !important;
     }
 
     .admin-confirm-dialog {

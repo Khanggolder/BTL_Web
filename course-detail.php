@@ -8,12 +8,18 @@ try {
     
     $stmt = $pdo->prepare("SELECT * FROM courses WHERE id = ? AND published = 1");
     $stmt->execute([$course_id]);
-    $course = $stmt->fetch();
+$course = $stmt->fetch();
 
-    if (!$course) {
-        header("Location: courses.php");
-        exit();
-    }
+if (!$course) {
+    header("Location: courses.php");
+    exit();
+}
+
+$level_labels = [
+    'BEGINNER' => 'Cơ bản',
+    'INTERMEDIATE' => 'Trung cấp',
+    'ADVANCED' => 'Nâng cao',
+];
 
     $page_title = $course['title'];
 
@@ -96,7 +102,7 @@ if ($has_discount) {
                 <div style="display: flex; flex-wrap: wrap; gap: 20px; font-size: 14px; font-weight: 600;">
                     <div style="display: flex; align-items: center; gap: 6px;"><i data-lucide="clock" style="width: 16px; height: 16px;"></i> <?php echo round(($course['duration'] ?? 0) / 60); ?> giờ học</div>
                     <div style="display: flex; align-items: center; gap: 6px;"><i data-lucide="book-open" style="width: 16px; height: 16px;"></i> <?php echo htmlspecialchars($course['total_lectures'] ?? 0); ?> bài giảng</div>
-                    <div style="display: flex; align-items: center; gap: 6px;"><i data-lucide="bar-chart-2" style="width: 16px; height: 16px;"></i> <?php echo htmlspecialchars($course['level']); ?></div>
+                    <div style="display: flex; align-items: center; gap: 6px;"><i data-lucide="bar-chart-2" style="width: 16px; height: 16px;"></i> <?php echo htmlspecialchars($level_labels[$course['level']] ?? $course['level']); ?></div>
                     <div style="display: flex; align-items: center; gap: 6px;"><i data-lucide="globe" style="width: 16px; height: 16px;"></i> Tiếng Việt</div>
                 </div>
 
@@ -181,7 +187,7 @@ if ($has_discount) {
                                     <div class="playlist-item">
                                         <div class="playlist-item-left">
                                             <i data-lucide="play-circle"></i>
-                                            <span>Bài <?php echo htmlspecialchars($lesson['order_index']); ?>: <?php echo htmlspecialchars($lesson['title']); ?></span>
+                                            <span><?php echo htmlspecialchars($lesson['title']); ?></span>
                                         </div>
                                         
                                         <div class="playlist-item-right">

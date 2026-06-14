@@ -11,10 +11,29 @@ $search = trim($_GET['search'] ?? '');
 
 $success_msg = '';
 $error_msg = '';
+$course_level_labels = [
+    'BEGINNER' => 'Cơ bản',
+    'INTERMEDIATE' => 'Trung cấp',
+    'ADVANCED' => 'Nâng cao',
+];
 
 function make_course_slug($title) {
-    $slug = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $title);
-    $slug = strtolower($slug ?: $title);
+    $slug = mb_strtolower($title, 'UTF-8');
+    $slug = strtr($slug, [
+        'à' => 'a', 'á' => 'a', 'ạ' => 'a', 'ả' => 'a', 'ã' => 'a',
+        'â' => 'a', 'ầ' => 'a', 'ấ' => 'a', 'ậ' => 'a', 'ẩ' => 'a', 'ẫ' => 'a',
+        'ă' => 'a', 'ằ' => 'a', 'ắ' => 'a', 'ặ' => 'a', 'ẳ' => 'a', 'ẵ' => 'a',
+        'è' => 'e', 'é' => 'e', 'ẹ' => 'e', 'ẻ' => 'e', 'ẽ' => 'e',
+        'ê' => 'e', 'ề' => 'e', 'ế' => 'e', 'ệ' => 'e', 'ể' => 'e', 'ễ' => 'e',
+        'ì' => 'i', 'í' => 'i', 'ị' => 'i', 'ỉ' => 'i', 'ĩ' => 'i',
+        'ò' => 'o', 'ó' => 'o', 'ọ' => 'o', 'ỏ' => 'o', 'õ' => 'o',
+        'ô' => 'o', 'ồ' => 'o', 'ố' => 'o', 'ộ' => 'o', 'ổ' => 'o', 'ỗ' => 'o',
+        'ơ' => 'o', 'ờ' => 'o', 'ớ' => 'o', 'ợ' => 'o', 'ở' => 'o', 'ỡ' => 'o',
+        'ù' => 'u', 'ú' => 'u', 'ụ' => 'u', 'ủ' => 'u', 'ũ' => 'u',
+        'ư' => 'u', 'ừ' => 'u', 'ứ' => 'u', 'ự' => 'u', 'ử' => 'u', 'ữ' => 'u',
+        'ỳ' => 'y', 'ý' => 'y', 'ỵ' => 'y', 'ỷ' => 'y', 'ỹ' => 'y',
+        'đ' => 'd',
+    ]);
     $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
     $slug = trim($slug, '-');
     return $slug ?: 'course';
@@ -431,9 +450,9 @@ if ($action === 'list') {
                             <h2 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;"><?php echo htmlspecialchars($course_data['title']); ?></h2>
                             <p style="color: var(--text-muted); margin-bottom: 18px;"><?php echo nl2br(htmlspecialchars($course_data['description'] ?: 'Chưa có mô tả.')); ?></p>
                             <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
-                                <div><strong>Slug</strong><br><span style="color: var(--text-muted);"><?php echo htmlspecialchars($course_data['slug']); ?></span></div>
+                                <div><strong>Tiêu đề</strong><br><span style="color: var(--text-muted);"><?php echo htmlspecialchars($course_data['title']); ?></span></div>
                                 <div><strong>Danh mục</strong><br><span style="color: var(--text-muted);"><?php echo htmlspecialchars($course_data['category']); ?></span></div>
-                                <div><strong>Cấp độ</strong><br><span style="color: var(--text-muted);"><?php echo htmlspecialchars($course_data['level']); ?></span></div>
+                                <div><strong>Cấp độ</strong><br><span style="color: var(--text-muted);"><?php echo htmlspecialchars($course_level_labels[$course_data['level']] ?? $course_data['level']); ?></span></div>
                                 <div><strong>Giảng viên</strong><br><span style="color: var(--text-muted);"><?php echo htmlspecialchars($course_data['instructor']); ?></span></div>
                                 <div><strong>Giá gốc</strong><br><span style="color: var(--primary); font-weight: 800;"><?php echo number_format($course_data['price'], 0, ',', '.'); ?>đ</span></div>
                                 <div><strong>Giá khuyến mãi</strong><br><span style="color: var(--success); font-weight: 800;"><?php echo number_format($course_data['discount_price'] ?: 0, 0, ',', '.'); ?>đ</span></div>
@@ -529,7 +548,7 @@ if ($action === 'list') {
 
                             <div class="form-group">
                                 <label for="thumbnail">Đường dẫn ảnh thu nhỏ Thumbnail (URL)</label>
-                                <input type="text" id="thumbnail" name="thumbnail" class="form-control" value="<?php echo htmlspecialchars($course_data['thumbnail'] ?? ''); ?>" placeholder="https:
+                                <input type="text" id="thumbnail" name="thumbnail" class="form-control" value="<?php echo htmlspecialchars($course_data['thumbnail'] ?? ''); ?>" placeholder="https://example.com/course-thumbnail.jpg">
                             </div>
                         </div>
 

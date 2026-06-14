@@ -14,6 +14,11 @@ $user_data = [];
 $user_orders = [];
 $user_enrollments = [];
 $user_stats = ['orders' => 0, 'enrollments' => 0];
+$order_status_labels = [
+    'PENDING' => 'Chờ duyệt',
+    'COMPLETED' => 'Hoàn tất',
+    'CANCELLED' => 'Đã hủy',
+];
 
 if ($action === 'revoke_course' && $target_user_id > 0) {
     $course_id = intval($_GET['course_id'] ?? 0);
@@ -238,9 +243,9 @@ if ($action === 'list') {
         </aside>
 
         <main class="admin-container">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;gap:16px;">
+            <div class="admin-users-page-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;gap:16px;">
                 <div>
-                    <h1 style="font-size:30px;font-weight:800;color:var(--text-main);margin-bottom:4px;">
+                    <h1 class="admin-users-page-title" style="font-size:30px;font-weight:800;color:var(--text-main);margin-bottom:4px;">
                         <?php echo $action === 'list' ? 'Quản lý người dùng' : ($action === 'add' ? 'Thêm người dùng' : ($action === 'view' ? 'Chi tiết người dùng' : 'Sửa người dùng')); ?>
                     </h1>
                     <p style="color:var(--text-muted);font-size:14px;">Cập nhật tài khoản, trạng thái kích hoạt và quyền quản trị.</p>
@@ -334,7 +339,7 @@ if ($action === 'list') {
                             <thead><tr style="border-bottom:1px solid var(--border);background:var(--bg-main);"><th style="padding:12px 16px;">Mã đơn</th><th style="padding:12px 16px;">Số tiền</th><th style="padding:12px 16px;">Trạng thái</th><th style="padding:12px 16px;">Ngày tạo</th></tr></thead>
                             <tbody>
                                 <?php foreach ($user_orders as $order): ?>
-                                    <tr style="border-bottom:1px solid var(--border);"><td style="padding:12px 16px;"><a href="orders.php?action=view&id=<?php echo $order['id']; ?>" style="color:var(--primary);font-weight:700;"><?php echo htmlspecialchars($order['order_number']); ?></a></td><td style="padding:12px 16px;"><?php echo number_format($order['total_amount'], 0, ',', '.'); ?>đ</td><td style="padding:12px 16px;"><?php echo htmlspecialchars($order['status']); ?></td><td style="padding:12px 16px;"><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></td></tr>
+                                    <tr style="border-bottom:1px solid var(--border);"><td style="padding:12px 16px;"><a href="orders.php?action=view&id=<?php echo $order['id']; ?>" style="color:var(--primary);font-weight:700;"><?php echo htmlspecialchars($order['order_number']); ?></a></td><td style="padding:12px 16px;"><?php echo number_format($order['total_amount'], 0, ',', '.'); ?>đ</td><td style="padding:12px 16px;"><?php echo htmlspecialchars($order_status_labels[$order['status']] ?? $order['status']); ?></td><td style="padding:12px 16px;"><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></td></tr>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
@@ -414,6 +419,7 @@ if ($action === 'list') {
                                         <th style="padding:12px 16px;">Vai trò</th>
                                         <th style="padding:12px 16px;">Trạng thái</th>
                                         <th style="padding:12px 16px;text-align:center;">Thao tác</th>
+                                        <th style="padding:12px 16px;text-align:center;">Xóa</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -427,15 +433,19 @@ if ($action === 'list') {
                                             <td style="padding:12px 16px;color:var(--text-muted);"><?php echo htmlspecialchars($u['email']); ?></td>
                                             <td style="padding:12px 16px;color:var(--text-muted);"><?php echo htmlspecialchars($u['phone'] ?: 'Chưa cập nhật'); ?></td>
                                             <td style="padding:12px 16px;"><?php echo $is_target_admin ? '<span style="background:#fee2e2;color:var(--danger);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">Admin</span>' : '<span style="background:#eff6ff;color:var(--primary);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">User</span>'; ?></td>
-                                            <td style="padding:12px 16px;"><?php echo $u['active'] ? '<span style="background:#d1fae5;color:var(--success);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">Active</span>' : '<span style="background:#f1f5f9;color:var(--text-muted);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">Locked</span>'; ?></td>
+                                            <td style="padding:12px 16px;"><?php echo $u['active'] ? '<span style="background:#d1fae5;color:var(--success);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">Đang hoạt động</span>' : '<span style="background:#f1f5f9;color:var(--text-muted);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">Bị khóa</span>'; ?></td>
                                             <td style="padding:12px 16px;text-align:center;">
                                                 <div style="display:flex;gap:8px;justify-content:center;">
                                                     <a href="users.php?action=view&id=<?php echo $u['id']; ?>" class="btn btn-secondary" style="padding:4px 10px;font-size:11px;border-radius:4px;height:28px;">Xem</a>
                                                     <a href="users.php?action=edit&id=<?php echo $u['id']; ?>" class="btn btn-outline" style="padding:4px 10px;font-size:11px;border-radius:4px;height:28px;">Sửa</a>
-                                                    <?php if ($u['id'] !== $current_admin_id): ?>
-                                                        <a href="users.php?action=delete&id=<?php echo $u['id']; ?>" class="btn btn-danger" style="padding:4px 10px;font-size:11px;border-radius:4px;height:28px;" data-confirm="Xóa người dùng này? Tất cả dữ liệu liên quan sẽ bị xóa theo.">Xóa</a>
-                                                    <?php endif; ?>
                                                 </div>
+                                            </td>
+                                            <td style="padding:12px 16px;text-align:center;">
+                                                <?php if ($u['id'] !== $current_admin_id): ?>
+                                                    <a href="users.php?action=delete&id=<?php echo $u['id']; ?>" class="btn btn-danger" style="padding:4px 10px;font-size:11px;border-radius:4px;height:28px;" data-confirm="Xóa người dùng này? Tất cả dữ liệu liên quan sẽ bị xóa theo.">Xóa</a>
+                                                <?php else: ?>
+                                                    <span style="color:var(--text-muted);font-size:12px;">-</span>
+                                                <?php endif; ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
