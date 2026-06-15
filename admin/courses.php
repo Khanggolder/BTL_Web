@@ -520,11 +520,24 @@ if ($action === 'list') {
 
                             <div class="form-group">
                                 <label for="level">Cấp độ học tập</label>
-                                <select id="level" name="level" class="form-control">
+                                <?php $selected_level = $course_data['level'] ?? 'BEGINNER'; ?>
+                                <select id="level" name="level" class="form-control admin-mobile-native-select">
                                     <option value="BEGINNER" <?php echo isset($course_data['level']) && $course_data['level'] === 'BEGINNER' ? 'selected' : ''; ?>>Cơ bản (Beginner)</option>
                                     <option value="INTERMEDIATE" <?php echo isset($course_data['level']) && $course_data['level'] === 'INTERMEDIATE' ? 'selected' : ''; ?>>Trung cấp (Intermediate)</option>
                                     <option value="ADVANCED" <?php echo isset($course_data['level']) && $course_data['level'] === 'ADVANCED' ? 'selected' : ''; ?>>Nâng cao (Advanced)</option>
                                 </select>
+                                <div class="admin-custom-select admin-mobile-custom-select" data-mobile-select>
+                                    <input type="hidden" name="level" value="<?php echo htmlspecialchars($selected_level); ?>" disabled>
+                                    <button type="button" class="admin-custom-select-toggle" aria-expanded="false">
+                                        <span><?php echo htmlspecialchars($course_level_labels[$selected_level] ?? $selected_level); ?></span>
+                                        <i data-lucide="chevron-down"></i>
+                                    </button>
+                                    <div class="admin-custom-select-menu">
+                                        <?php foreach ($course_level_labels as $value => $label): ?>
+                                            <button type="button" data-value="<?php echo htmlspecialchars($value); ?>" class="<?php echo $selected_level === $value ? 'is-selected' : ''; ?>"><?php echo htmlspecialchars($label); ?></button>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -582,6 +595,65 @@ if ($action === 'list') {
     </div>
 
     <script>
+        const adminMobileSelectQuery = window.matchMedia('(max-width: 900px)');
+
+        function syncAdminMobileSelectMode() {
+            const useCustomSelect = adminMobileSelectQuery.matches;
+
+            document.querySelectorAll('.admin-mobile-native-select').forEach(function(nativeSelect) {
+                nativeSelect.disabled = useCustomSelect;
+            });
+
+            document.querySelectorAll('[data-mobile-select] input[type="hidden"]').forEach(function(customInput) {
+                customInput.disabled = !useCustomSelect;
+            });
+        }
+
+        document.querySelectorAll('[data-mobile-select]').forEach(function(selectBox) {
+            const toggle = selectBox.querySelector('.admin-custom-select-toggle');
+            const hiddenInput = selectBox.querySelector('input[type="hidden"]');
+            const label = toggle ? toggle.querySelector('span') : null;
+            const options = selectBox.querySelectorAll('.admin-custom-select-menu button');
+
+            if (!toggle || !hiddenInput || !label) return;
+
+            toggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.querySelectorAll('[data-mobile-select].is-open').forEach(function(openBox) {
+                    if (openBox !== selectBox) {
+                        openBox.classList.remove('is-open');
+                        openBox.querySelector('.admin-custom-select-toggle')?.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                const isOpen = selectBox.classList.toggle('is-open');
+                toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            });
+
+            options.forEach(function(option) {
+                option.addEventListener('click', function() {
+                    hiddenInput.value = option.dataset.value || '';
+                    label.textContent = option.textContent.trim();
+                    options.forEach(function(item) {
+                        item.classList.remove('is-selected');
+                    });
+                    option.classList.add('is-selected');
+                    selectBox.classList.remove('is-open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                });
+            });
+        });
+
+        document.addEventListener('click', function() {
+            document.querySelectorAll('[data-mobile-select].is-open').forEach(function(selectBox) {
+                selectBox.classList.remove('is-open');
+                selectBox.querySelector('.admin-custom-select-toggle')?.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        syncAdminMobileSelectMode();
+        adminMobileSelectQuery.addEventListener?.('change', syncAdminMobileSelectMode);
+
         const selectAllCourses = document.getElementById('select-all-courses');
         const bulkDeleteCoursesBtn = document.getElementById('bulk-delete-courses-btn');
         const courseCheckboxes = document.querySelectorAll('.course-row-check');

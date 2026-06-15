@@ -294,6 +294,31 @@
     display: none;
 }
 
+.admin-mobile-custom-select {
+    display: none;
+}
+
+.admin-user-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 42px;
+    font-weight: 800;
+    overflow: hidden;
+}
+
+.admin-user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+}
+
 @media (max-width: 768px) {
     .form-grid {
         grid-template-columns: 1fr;
@@ -464,6 +489,24 @@
         flex: 0 0 auto !important;
     }
 
+    .lesson-back-btn .lesson-back-text {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        line-height: 1.15 !important;
+    }
+
+    .lesson-back-btn {
+        flex: 0 0 90px !important;
+        min-width: 88px !important;
+        padding: 9px 9px !important;
+    }
+
+    .lesson-back-btn .lesson-back-text span {
+        display: block !important;
+        white-space: nowrap !important;
+    }
+
     .admin-card-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 14px !important;
@@ -542,6 +585,17 @@
         display: block !important;
         width: 100% !important;
         max-width: 100% !important;
+    }
+
+    .admin-mobile-native-select {
+        display: none !important;
+    }
+
+    .admin-mobile-custom-select {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 1 1 auto !important;
     }
 
     .admin-custom-select-menu {
@@ -656,6 +710,49 @@
         font-size: 13px !important;
     }
 
+    .admin-orders-page-header {
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+
+    .admin-orders-page-header > div {
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+    }
+
+    .admin-orders-page-header h1 {
+        white-space: nowrap !important;
+        overflow-wrap: normal !important;
+        word-break: normal !important;
+        font-size: clamp(21px, 6vw, 26px) !important;
+        line-height: 1.15 !important;
+    }
+
+    .admin-orders-top-btn {
+        flex: 0 0 auto !important;
+        white-space: nowrap !important;
+        min-width: 88px !important;
+        justify-content: center !important;
+    }
+
+    .admin-orders-table {
+        min-width: 780px !important;
+    }
+
+    .admin-orders-table td:last-child > div {
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+    }
+
+    .admin-orders-table td:last-child .btn,
+    .admin-orders-table td:last-child button {
+        white-space: nowrap !important;
+        min-height: 28px !important;
+        height: 28px !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
     .admin-container select,
     .admin-container select.form-control {
         max-width: calc(100vw - 24px) !important;
@@ -684,6 +781,30 @@
         word-break: normal !important;
         font-size: clamp(21px, 6vw, 26px) !important;
         line-height: 1.15 !important;
+    }
+
+    .admin-users-top-btn {
+        flex: 0 0 auto !important;
+        white-space: nowrap !important;
+        min-width: 96px !important;
+        justify-content: center !important;
+    }
+
+    .admin-users-table {
+        min-width: 860px !important;
+    }
+
+    .admin-users-table td:nth-last-child(-n + 2) > div {
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+    }
+
+    .admin-users-table td:nth-last-child(-n + 2) .btn {
+        white-space: nowrap !important;
+        min-height: 28px !important;
+        height: 28px !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 
     .admin-confirm-dialog {

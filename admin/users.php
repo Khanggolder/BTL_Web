@@ -242,7 +242,7 @@ if ($action === 'list') {
             </ul>
         </aside>
 
-        <main class="admin-container">
+        <main class="admin-container admin-users-page">
             <div class="admin-users-page-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;gap:16px;">
                 <div>
                     <h1 class="admin-users-page-title" style="font-size:30px;font-weight:800;color:var(--text-main);margin-bottom:4px;">
@@ -251,11 +251,11 @@ if ($action === 'list') {
                     <p style="color:var(--text-muted);font-size:14px;">Cập nhật tài khoản, trạng thái kích hoạt và quyền quản trị.</p>
                 </div>
                 <?php if ($action === 'list'): ?>
-                    <a href="users.php?action=add" class="btn btn-primary" style="height:42px;font-size:14px;border-radius:var(--radius-sm);">
+                    <a href="users.php?action=add" class="btn btn-primary admin-users-top-btn" style="height:42px;font-size:14px;border-radius:var(--radius-sm);">
                         <i data-lucide="user-plus" style="width:18px;height:18px;"></i> Thêm người dùng
                     </a>
                 <?php else: ?>
-                    <a href="users.php" class="btn btn-outline" style="height:42px;font-size:14px;border-radius:var(--radius-sm);">
+                    <a href="users.php" class="btn btn-outline admin-users-top-btn" style="height:42px;font-size:14px;border-radius:var(--radius-sm);">
                         <i data-lucide="arrow-left" style="width:18px;height:18px;"></i> Quay lại
                     </a>
                 <?php endif; ?>
@@ -273,8 +273,15 @@ if ($action === 'list') {
                 <div class="admin-table-card" style="margin-bottom: 24px;">
                     <div style="display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
                         <div style="display: flex; gap: 16px; align-items: center;">
-                            <div style="width: 72px; height: 72px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800;">
-                                <?php echo mb_strtoupper(mb_substr($user_data['full_name'] ?? 'U', 0, 1, 'UTF-8'), 'UTF-8'); ?>
+                            <div class="admin-user-avatar" style="width: 72px; height: 72px; flex-basis: 72px; font-size: 28px;">
+                                <?php
+                                    $detail_user_avatar = trim($user_data['avatar'] ?? '');
+                                    $detail_user_char = mb_strtoupper(mb_substr($user_data['full_name'] ?? 'U', 0, 1, 'UTF-8'), 'UTF-8');
+                                ?>
+                                <?php if ($detail_user_avatar !== ''): ?>
+                                    <img src="<?php echo htmlspecialchars($detail_user_avatar); ?>" alt="<?php echo htmlspecialchars($user_data['full_name']); ?>" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                <?php endif; ?>
+                                <span style="width:100%;height:100%;align-items:center;justify-content:center;<?php echo $detail_user_avatar !== '' ? 'display:none;' : 'display:flex;'; ?>"><?php echo $detail_user_char; ?></span>
                             </div>
                             <div>
                                 <h2 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;"><?php echo htmlspecialchars($user_data['full_name']); ?></h2>
@@ -370,6 +377,15 @@ if ($action === 'list') {
                             <div class="form-group">
                                 <label for="avatar">Avatar URL</label>
                                 <input class="form-control" id="avatar" name="avatar" value="<?php echo htmlspecialchars($user_data['avatar'] ?? ''); ?>">
+                                <?php if (!empty($user_data['avatar'])): ?>
+                                    <div style="display:flex;align-items:center;gap:10px;margin-top:10px;">
+                                        <div class="admin-user-avatar">
+                                            <img src="<?php echo htmlspecialchars($user_data['avatar']); ?>" alt="<?php echo htmlspecialchars($user_data['full_name'] ?? 'Avatar'); ?>" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                            <span style="width:100%;height:100%;align-items:center;justify-content:center;display:none;"><?php echo mb_strtoupper(mb_substr($user_data['full_name'] ?? 'U', 0, 1, 'UTF-8'), 'UTF-8'); ?></span>
+                                        </div>
+                                        <span style="font-size:12px;color:var(--text-muted);font-weight:600;">Preview avatar</span>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="form-group" style="margin-bottom:20px;">
@@ -409,7 +425,7 @@ if ($action === 'list') {
                             <div style="display:flex;justify-content:flex-start;align-items:center;margin-bottom:14px;gap:12px;">
                                 <span style="color:var(--text-muted);font-size:13px;font-weight:600;">Đang hiển thị <?php echo count($users); ?> người dùng</span>
                             </div>
-                            <table style="width:100%;border-collapse:collapse;text-align:left;font-size:14px;">
+                            <table class="admin-users-table" style="width:100%;border-collapse:collapse;text-align:left;font-size:14px;">
                                 <thead>
                                     <tr style="border-bottom:1px solid var(--border);font-weight:700;color:var(--text-main);background-color:var(--bg-main);">
                                         <th style="padding:12px 16px;width:48px;text-align:center;"><input type="checkbox" id="select-all-users" aria-label="Chọn tất cả người dùng"></th>
@@ -429,7 +445,23 @@ if ($action === 'list') {
                                             <td style="padding:12px 16px;text-align:center;">
                                                 <input type="checkbox" class="user-row-check" name="user_ids[]" value="<?php echo $u['id']; ?>" <?php echo $u['id'] === $current_admin_id ? 'disabled' : ''; ?> aria-label="Chọn <?php echo htmlspecialchars($u['full_name']); ?>">
                                             </td>
-                                            <td style="padding:12px 16px;"><strong><?php echo htmlspecialchars($u['full_name']); ?></strong><br><span style="font-size:12px;color:var(--text-muted);">ID #<?php echo $u['id']; ?></span></td>
+                                            <td style="padding:12px 16px;">
+                                                <div style="display:flex;align-items:center;gap:10px;">
+                                                    <div class="admin-user-avatar">
+                                                        <?php
+                                                            $admin_user_avatar = trim($u['avatar'] ?? '');
+                                                            $admin_user_char = mb_strtoupper(mb_substr($u['full_name'] ?? 'U', 0, 1, 'UTF-8'), 'UTF-8');
+                                                        ?>
+                                                        <?php if ($admin_user_avatar !== ''): ?>
+                                                            <img src="<?php echo htmlspecialchars($admin_user_avatar); ?>" alt="<?php echo htmlspecialchars($u['full_name']); ?>" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                                        <?php endif; ?>
+                                                        <span style="width:100%;height:100%;align-items:center;justify-content:center;<?php echo $admin_user_avatar !== '' ? 'display:none;' : 'display:flex;'; ?>"><?php echo $admin_user_char; ?></span>
+                                                    </div>
+                                                    <div>
+                                                        <strong><?php echo htmlspecialchars($u['full_name']); ?></strong><br><span style="font-size:12px;color:var(--text-muted);">ID #<?php echo $u['id']; ?></span>
+                                                    </div>
+                                                </div>
+                                            </td>
                                             <td style="padding:12px 16px;color:var(--text-muted);"><?php echo htmlspecialchars($u['email']); ?></td>
                                             <td style="padding:12px 16px;color:var(--text-muted);"><?php echo htmlspecialchars($u['phone'] ?: 'Chưa cập nhật'); ?></td>
                                             <td style="padding:12px 16px;"><?php echo $is_target_admin ? '<span style="background:#fee2e2;color:var(--danger);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">Admin</span>' : '<span style="background:#eff6ff;color:var(--primary);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">User</span>'; ?></td>

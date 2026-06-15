@@ -125,8 +125,12 @@ function is_active($page_name) {
                         <button type="button" class="avatar" id="user-menu-toggle" aria-label="Mở menu tài khoản" aria-expanded="false">
                             <?php 
                                 $name_char = mb_substr($current_user['full_name'] ?? 'U', 0, 1, 'UTF-8');
-                                echo mb_strtoupper($name_char, 'UTF-8'); 
+                                $avatar_url = trim($current_user['avatar'] ?? '');
                             ?>
+                            <?php if ($avatar_url !== ''): ?>
+                                <img src="<?php echo htmlspecialchars($avatar_url); ?>" alt="<?php echo htmlspecialchars($current_user['full_name'] ?? 'Avatar'); ?>" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                            <?php endif; ?>
+                            <span style="<?php echo $avatar_url !== '' ? 'display:none;' : 'display:flex;'; ?>"><?php echo mb_strtoupper($name_char, 'UTF-8'); ?></span>
                         </button>
                         <div class="user-dropdown">
                             <div class="user-info">

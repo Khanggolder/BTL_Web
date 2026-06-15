@@ -317,16 +317,16 @@ if ($action === 'list') {
             </ul>
         </aside>
 
-        <main class="admin-container">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;gap:16px;">
+        <main class="admin-container admin-orders-page">
+            <div class="admin-orders-page-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;gap:16px;">
                 <div>
                     <h1 style="font-size:30px;font-weight:800;color:var(--text-main);margin-bottom:4px;"><?php echo $action === 'list' ? 'Quản lý đơn hàng' : ($action === 'add' ? 'Tạo đơn hàng' : ($action === 'view' ? 'Chi tiết đơn hàng' : 'Sửa đơn hàng')); ?></h1>
                     <p style="color:var(--text-muted);font-size:14px;">Cập nhật đơn hàng và kích hoạt khóa học cho học viên.</p>
                 </div>
                 <?php if ($action === 'list'): ?>
-                    <a href="orders.php?action=add" class="btn btn-primary" style="height:42px;font-size:14px;border-radius:var(--radius-sm);"><i data-lucide="plus-circle" style="width:18px;height:18px;"></i> Tạo đơn hàng</a>
+                    <a href="orders.php?action=add" class="btn btn-primary admin-orders-top-btn" style="height:42px;font-size:14px;border-radius:var(--radius-sm);"><i data-lucide="plus-circle" style="width:18px;height:18px;"></i> Tạo đơn hàng</a>
                 <?php else: ?>
-                    <a href="orders.php" class="btn btn-outline" style="height:42px;font-size:14px;border-radius:var(--radius-sm);"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i> Quay lại</a>
+                    <a href="orders.php" class="btn btn-outline admin-orders-top-btn" style="height:42px;font-size:14px;border-radius:var(--radius-sm);"><i data-lucide="arrow-left" style="width:18px;height:18px;"></i> Quay lại</a>
                 <?php endif; ?>
             </div>
 
@@ -384,30 +384,78 @@ if ($action === 'list') {
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="user_id">Học viên</label>
-                                <select class="form-control" id="user_id" name="user_id" required>
+                                <?php
+                                    $selected_user_label = '';
+                                    foreach ($users as $u) {
+                                        if ((int)($order_data['user_id'] ?? 0) === (int)$u['id'] || $selected_user_label === '') {
+                                            $selected_user_label = $u['full_name'] . ' - ' . $u['email'];
+                                            if ((int)($order_data['user_id'] ?? 0) === (int)$u['id']) break;
+                                        }
+                                    }
+                                ?>
+                                <select class="form-control admin-mobile-native-select" id="user_id" name="user_id" required>
                                     <?php foreach ($users as $u): ?>
                                         <option value="<?php echo $u['id']; ?>" <?php echo (int)($order_data['user_id'] ?? 0) === (int)$u['id'] ? 'selected' : ''; ?>>
                                             <?php echo htmlspecialchars($u['full_name'] . ' - ' . $u['email']); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
+                                <div class="admin-custom-select admin-mobile-custom-select" data-mobile-select>
+                                    <input type="hidden" name="user_id" value="<?php echo (int)($order_data['user_id'] ?? ($users[0]['id'] ?? 0)); ?>" disabled>
+                                    <button type="button" class="admin-custom-select-toggle" aria-expanded="false">
+                                        <span><?php echo htmlspecialchars($selected_user_label); ?></span>
+                                        <i data-lucide="chevron-down"></i>
+                                    </button>
+                                    <div class="admin-custom-select-menu">
+                                        <?php foreach ($users as $u): ?>
+                                            <?php $user_label = $u['full_name'] . ' - ' . $u['email']; ?>
+                                            <button type="button" data-value="<?php echo $u['id']; ?>" class="<?php echo (int)($order_data['user_id'] ?? 0) === (int)$u['id'] ? 'is-selected' : ''; ?>"><?php echo htmlspecialchars($user_label); ?></button>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="payment_method">Phương thức</label>
-                                <select class="form-control" id="payment_method" name="payment_method">
+                                <?php $selected_payment_method = $order_data['payment_method'] ?? array_key_first($payment_methods); ?>
+                                <select class="form-control admin-mobile-native-select" id="payment_method" name="payment_method">
                                     <?php foreach ($payment_methods as $value => $label): ?>
                                         <option value="<?php echo htmlspecialchars($value); ?>" <?php echo ($order_data['payment_method'] ?? '') === $value ? 'selected' : ''; ?>><?php echo htmlspecialchars($label); ?></option>
                                     <?php endforeach; ?>
                                 </select>
+                                <div class="admin-custom-select admin-mobile-custom-select" data-mobile-select>
+                                    <input type="hidden" name="payment_method" value="<?php echo htmlspecialchars($selected_payment_method); ?>" disabled>
+                                    <button type="button" class="admin-custom-select-toggle" aria-expanded="false">
+                                        <span><?php echo htmlspecialchars($payment_methods[$selected_payment_method] ?? reset($payment_methods)); ?></span>
+                                        <i data-lucide="chevron-down"></i>
+                                    </button>
+                                    <div class="admin-custom-select-menu">
+                                        <?php foreach ($payment_methods as $value => $label): ?>
+                                            <button type="button" data-value="<?php echo htmlspecialchars($value); ?>" class="<?php echo $selected_payment_method === $value ? 'is-selected' : ''; ?>"><?php echo htmlspecialchars($label); ?></button>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group" style="margin-bottom:20px;">
                             <label for="status">Trạng thái</label>
-                            <select class="form-control" id="status" name="status">
+                            <?php $selected_status = $order_data['status'] ?? 'PENDING'; ?>
+                            <select class="form-control admin-mobile-native-select" id="status" name="status">
                                 <?php foreach ($order_status_labels as $value => $label): ?>
                                     <option value="<?php echo $value; ?>" <?php echo ($order_data['status'] ?? 'PENDING') === $value ? 'selected' : ''; ?>><?php echo $label; ?></option>
                                 <?php endforeach; ?>
                             </select>
+                            <div class="admin-custom-select admin-mobile-custom-select" data-mobile-select>
+                                <input type="hidden" name="status" value="<?php echo htmlspecialchars($selected_status); ?>" disabled>
+                                <button type="button" class="admin-custom-select-toggle" aria-expanded="false">
+                                    <span><?php echo htmlspecialchars($order_status_labels[$selected_status] ?? $selected_status); ?></span>
+                                    <i data-lucide="chevron-down"></i>
+                                </button>
+                                <div class="admin-custom-select-menu">
+                                    <?php foreach ($order_status_labels as $value => $label): ?>
+                                        <button type="button" data-value="<?php echo htmlspecialchars($value); ?>" class="<?php echo $selected_status === $value ? 'is-selected' : ''; ?>"><?php echo htmlspecialchars($label); ?></button>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group" style="margin-bottom:24px;">
                             <label>Khóa học trong đơn</label>
@@ -453,7 +501,7 @@ if ($action === 'list') {
                         <p style="color:var(--text-muted);font-style:italic;text-align:center;padding:40px 0;">Không tìm thấy đơn hàng phù hợp.</p>
                     <?php else: ?>
                         <form id="bulk-orders-form" method="POST" action="orders.php?status=<?php echo urlencode($status_filter); ?>&search=<?php echo urlencode($search); ?>" data-confirm="Xóa các đơn hàng đã chọn? Quyền sở hữu khóa học liên quan sẽ được đồng bộ lại."></form>
-                        <table style="width:100%;border-collapse:collapse;text-align:left;font-size:14px;">
+                        <table class="admin-orders-table" style="width:100%;border-collapse:collapse;text-align:left;font-size:14px;">
                             <thead>
                                 <tr style="border-bottom:1px solid var(--border);font-weight:700;color:var(--text-main);background-color:var(--bg-main);">
                                     <th style="padding:12px 16px;width:48px;text-align:center;"><input type="checkbox" id="select-all-orders" aria-label="Chọn tất cả đơn hàng"></th>
@@ -497,6 +545,65 @@ if ($action === 'list') {
         </main>
     </div>
     <script>
+        const adminMobileSelectQuery = window.matchMedia('(max-width: 900px)');
+
+        function syncAdminMobileSelectMode() {
+            const useCustomSelect = adminMobileSelectQuery.matches;
+
+            document.querySelectorAll('.admin-mobile-native-select').forEach(function(nativeSelect) {
+                nativeSelect.disabled = useCustomSelect;
+            });
+
+            document.querySelectorAll('[data-mobile-select] input[type="hidden"]').forEach(function(customInput) {
+                customInput.disabled = !useCustomSelect;
+            });
+        }
+
+        document.querySelectorAll('[data-mobile-select]').forEach(function(selectBox) {
+            const toggle = selectBox.querySelector('.admin-custom-select-toggle');
+            const hiddenInput = selectBox.querySelector('input[type="hidden"]');
+            const label = toggle ? toggle.querySelector('span') : null;
+            const options = selectBox.querySelectorAll('.admin-custom-select-menu button');
+
+            if (!toggle || !hiddenInput || !label) return;
+
+            toggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.querySelectorAll('[data-mobile-select].is-open').forEach(function(openBox) {
+                    if (openBox !== selectBox) {
+                        openBox.classList.remove('is-open');
+                        openBox.querySelector('.admin-custom-select-toggle')?.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                const isOpen = selectBox.classList.toggle('is-open');
+                toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            });
+
+            options.forEach(function(option) {
+                option.addEventListener('click', function() {
+                    hiddenInput.value = option.dataset.value || '';
+                    label.textContent = option.textContent.trim();
+                    options.forEach(function(item) {
+                        item.classList.remove('is-selected');
+                    });
+                    option.classList.add('is-selected');
+                    selectBox.classList.remove('is-open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                });
+            });
+        });
+
+        document.addEventListener('click', function() {
+            document.querySelectorAll('[data-mobile-select].is-open').forEach(function(selectBox) {
+                selectBox.classList.remove('is-open');
+                selectBox.querySelector('.admin-custom-select-toggle')?.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        syncAdminMobileSelectMode();
+        adminMobileSelectQuery.addEventListener?.('change', syncAdminMobileSelectMode);
+
         const selectAllOrders = document.getElementById('select-all-orders');
         const bulkDeleteOrdersBtn = document.getElementById('bulk-delete-orders-btn');
         const orderCheckboxes = document.querySelectorAll('.order-row-check');

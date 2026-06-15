@@ -350,9 +350,12 @@ if (isset($_GET['success'])) {
                 </div>
 
                 <?php if ($action !== 'list'): ?>
-                    <a href="lessons.php?course_id=<?php echo $selected_course_id; ?>" class="btn btn-outline" style="height: 42px; font-size: 14px; border-radius: var(--radius-sm);">
+                    <a href="lessons.php?course_id=<?php echo $selected_course_id; ?>" class="btn btn-outline lesson-back-btn" style="height: 42px; font-size: 14px; border-radius: var(--radius-sm);">
                         <i data-lucide="arrow-left" style="width: 18px; height: 18px;"></i>
-                        Quay lại danh sách
+                        <span class="lesson-back-text">
+                            <span>Quay lại</span>
+                            <span>danh sách</span>
+                        </span>
                     </a>
                 <?php endif; ?>
             </div>

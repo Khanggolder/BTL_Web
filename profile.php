@@ -20,13 +20,14 @@ $payment_labels = [
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     $full_name = trim($_POST['full_name'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
+    $avatar = trim($_POST['avatar'] ?? '');
     
     if (empty($full_name)) {
         $error_msg = 'Họ và tên không được để trống!';
     } else {
         try {
-            $stmt = $pdo->prepare("UPDATE users SET full_name = ?, phone = ? WHERE id = ?");
-            $stmt->execute([$full_name, $phone, $user_id]);
+            $stmt = $pdo->prepare("UPDATE users SET full_name = ?, phone = ?, avatar = ? WHERE id = ?");
+            $stmt->execute([$full_name, $phone, $avatar, $user_id]);
             $success_msg = 'Cập nhật thông tin cá nhân thành công!';
         } catch (PDOException $e) {
             $error_msg = 'Lỗi cập nhật: ' . $e->getMessage();
@@ -88,11 +89,15 @@ require_once __DIR__ . '/includes/header.php';
                 
                 <div style="text-align: center; margin-bottom: 24px;">
                     
-                    <div style="width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 800; margin: 0 auto 16px; border: 3px solid white; box-shadow: var(--shadow-md);">
+                    <div class="profile-avatar" style="width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 800; margin: 0 auto 16px; border: 3px solid white; box-shadow: var(--shadow-md); overflow: hidden;">
                         <?php 
                             $avatar_char = mb_substr($user['full_name'] ?? 'U', 0, 1, 'UTF-8');
-                            echo mb_strtoupper($avatar_char, 'UTF-8');
+                            $profile_avatar_url = trim($user['avatar'] ?? '');
                         ?>
+                        <?php if ($profile_avatar_url !== ''): ?>
+                            <img src="<?php echo htmlspecialchars($profile_avatar_url); ?>" alt="<?php echo htmlspecialchars($user['full_name']); ?>" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                        <?php endif; ?>
+                        <span style="width:100%;height:100%;align-items:center;justify-content:center;<?php echo $profile_avatar_url !== '' ? 'display:none;' : 'display:flex;'; ?>"><?php echo mb_strtoupper($avatar_char, 'UTF-8'); ?></span>
                     </div>
                     <h3 style="font-weight: 800; font-size: 20px; color: var(--text-main); margin-bottom: 4px;"><?php echo htmlspecialchars($user['full_name']); ?></h3>
                     <p style="color: var(--text-muted); font-size: 13px; font-weight: 500;"><?php echo htmlspecialchars($user['email']); ?></p>
@@ -122,6 +127,11 @@ require_once __DIR__ . '/includes/header.php';
                     <div class="form-group" style="margin-bottom: 24px;">
                         <label for="phone" style="font-size: 13px;">Số điện thoại</label>
                         <input type="tel" id="phone" name="phone" class="form-control" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>" placeholder="Chưa cập nhật" style="height: 42px;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 24px;">
+                        <label for="avatar" style="font-size: 13px;">Avatar URL</label>
+                        <input type="url" id="avatar" name="avatar" class="form-control" value="<?php echo htmlspecialchars($user['avatar'] ?? ''); ?>" placeholder="https://example.com/avatar.jpg" style="height: 42px;">
                     </div>
 
                     <button type="submit" class="btn btn-primary" style="width: 100%; height: 42px; font-size: 14px; border-radius: var(--radius-sm);">
