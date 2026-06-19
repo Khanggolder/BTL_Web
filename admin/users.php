@@ -476,7 +476,7 @@ if ($action === 'list') {
                                                 <?php if ($u['id'] !== $current_admin_id): ?>
                                                     <a href="users.php?action=delete&id=<?php echo $u['id']; ?>" class="btn btn-danger" style="padding:4px 10px;font-size:11px;border-radius:4px;height:28px;" data-confirm="Xóa người dùng này? Tất cả dữ liệu liên quan sẽ bị xóa theo.">Xóa</a>
                                                 <?php else: ?>
-                                                    <span style="color:var(--text-muted);font-size:12px;">-</span>
+                                                    <span style="color:var(--text-muted);font-size:12px;"></span>
                                                 <?php endif; ?>
                                             </td>
                                         </tr>
