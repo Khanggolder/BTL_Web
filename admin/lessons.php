@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../includes/video_helper.php';
 require_once __DIR__ . '/../includes/auth_check.php';
 
 
@@ -178,6 +179,8 @@ if (($action === 'edit' || $action === 'view') && $lesson_id > 0) {
 }
 
 
+$lesson_youtube_id = extract_youtube_video_id($lesson_data['video_url'] ?? '');
+$lesson_google_drive_url = google_drive_preview_url($lesson_data['video_url'] ?? '');
 $lessons = [];
 if ($action === 'list' && $selected_course_id > 0) {
     try {
@@ -279,6 +282,103 @@ if (isset($_GET['success'])) {
             gap: 20px;
             margin-bottom: 20px;
         }
+
+        .admin-lesson-view-card {
+            padding: 28px;
+        }
+
+        .admin-lesson-view-header {
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .admin-lesson-view-header h2 {
+            margin: 0 0 8px;
+            color: var(--text-main);
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+
+        .admin-lesson-view-header p {
+            max-width: 900px;
+            margin: 0;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .admin-lesson-view-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.55fr) minmax(300px, .75fr);
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        .admin-lesson-view-media {
+            min-width: 0;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .admin-lesson-view-media > iframe,
+        .admin-lesson-view-media > video,
+        .admin-lesson-view-media > div {
+            width: 100%;
+            margin: 0;
+        }
+
+        .admin-lesson-view-info {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 22px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-main);
+        }
+
+        .admin-lesson-view-info h3 {
+            margin: 0 0 8px;
+            color: var(--text-main);
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .admin-lesson-view-details {
+            display: grid;
+            flex: 1;
+        }
+
+        .admin-lesson-view-details > div {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            line-height: 1.55;
+        }
+
+        .admin-lesson-view-details > div:last-child {
+            border-bottom: 0;
+        }
+
+        .admin-lesson-view-edit {
+            width: 100%;
+            height: 42px;
+            margin-top: 18px;
+        }
+
+        @media (max-width: 900px) {
+            .admin-lesson-view-card {
+                padding: 18px;
+            }
+
+            .admin-lesson-view-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-lesson-view-info {
+                padding: 18px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -354,7 +454,6 @@ if (isset($_GET['success'])) {
                         <i data-lucide="arrow-left" style="width: 18px; height: 18px;"></i>
                         <span class="lesson-back-text">
                             <span>Quay lại</span>
-                            <span>danh sách</span>
                         </span>
                     </a>
                 <?php endif; ?>
@@ -449,7 +548,7 @@ if (isset($_GET['success'])) {
                         <?php if (empty($filtered_courses)): ?>
                             <p style="color: var(--text-muted); font-style: italic; text-align: center; padding: 40px 0;">Không tìm thấy khóa học phù hợp.</p>
                         <?php else: ?>
-                            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+                            <table class="admin-lessons-course-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
                                 <thead>
                                     <tr style="border-bottom: 1px solid var(--border); font-weight: 700; color: var(--text-main); background-color: var(--bg-main);">
                                         <th style="padding: 12px 16px;">Khóa học</th>
@@ -465,7 +564,7 @@ if (isset($_GET['success'])) {
                                             <td style="padding: 12px 16px; color: var(--text-muted);"><?php echo htmlspecialchars($course_option['category']); ?></td>
                                             <td style="padding: 12px 16px; color: var(--text-muted);"><?php echo htmlspecialchars($level_labels[$course_option['level']] ?? $course_option['level']); ?></td>
                                             <td style="padding: 12px 16px; text-align: center;">
-                                                <a href="lessons.php?course_id=<?php echo $course_option['id']; ?>&search=<?php echo urlencode($search); ?>&category=<?php echo urlencode($category_filter); ?>&level=<?php echo urlencode($level_filter); ?>" class="btn btn-primary" style="height: 32px; padding: 6px 12px; font-size: 12px; border-radius: 4px;">Xem bài giảng</a>
+                                                <a href="lessons.php?course_id=<?php echo $course_option['id']; ?>&search=<?php echo urlencode($search); ?>&category=<?php echo urlencode($category_filter); ?>&level=<?php echo urlencode($level_filter); ?>" class="btn btn-primary admin-lessons-view-btn" style="height: 32px; padding: 6px 12px; font-size: 12px; border-radius: 4px;">Xem bài giảng</a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -541,30 +640,36 @@ if (isset($_GET['success'])) {
             <?php endif; ?>
 
             <?php if ($action === 'view'): ?>
-                <div class="admin-table-card">
-                    <div style="display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr); gap: 24px; align-items: start;">
-                        <div>
-                            <h2 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;"><?php echo htmlspecialchars($lesson_data['title']); ?></h2>
-                            <p style="color: var(--text-muted); margin-bottom: 18px;"><?php echo nl2br(htmlspecialchars($lesson_data['description'] ?: 'Chưa có nội dung mô tả.')); ?></p>
-                            <?php if (!empty($lesson_data['video_url'])): ?>
-                                <video controls style="width: 100%; aspect-ratio: 16/9; background: #020617; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                <div class="admin-table-card admin-lesson-view-card">
+                    <div class="admin-lesson-view-header">
+                        <h2><?php echo htmlspecialchars($lesson_data['title']); ?></h2>
+                        <p><?php echo nl2br(htmlspecialchars($lesson_data['description'] ?: 'Chưa có nội dung mô tả.')); ?></p>
+                    </div>
+                    <div class="admin-lesson-view-grid">
+                        <div class="admin-lesson-view-media">
+                            <?php if ($lesson_youtube_id): ?>
+                                <iframe src="https://www.youtube.com/embed/<?php echo htmlspecialchars($lesson_youtube_id); ?>" title="<?php echo htmlspecialchars($lesson_data['title']); ?>" allowfullscreen style="width:100%;aspect-ratio:16/9;border:1px solid var(--border);border-radius:var(--radius-sm);"></iframe>
+                            <?php elseif ($lesson_google_drive_url): ?>
+                                <iframe src="<?php echo htmlspecialchars($lesson_google_drive_url); ?>" title="<?php echo htmlspecialchars($lesson_data['title']); ?>" allow="autoplay; fullscreen" allowfullscreen style="width:100%;aspect-ratio:16/9;border:1px solid var(--border);border-radius:var(--radius-sm);"></iframe>
+                            <?php elseif (!empty($lesson_data['video_url'])): ?>
+                                <video controls controlslist="nodownload noremoteplayback" disablepictureinpicture oncontextmenu="return false;" style="width: 100%; aspect-ratio: 16/9; background: #020617; border-radius: var(--radius-sm); border: 1px solid var(--border);">
                                     <source src="<?php echo htmlspecialchars($lesson_data['video_url']); ?>">
                                 </video>
                             <?php else: ?>
                                 <div style="aspect-ratio: 16/9; background: var(--bg-main); border: 1px dashed var(--border); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--text-muted);">Chưa có video</div>
                             <?php endif; ?>
                         </div>
-                        <div style="background: var(--bg-main); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px;">
-                            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 16px;">Thông tin bài học</h3>
-                            <div style="display: grid; gap: 12px;">
+                        <aside class="admin-lesson-view-info">
+                            <h3>Thông tin bài học</h3>
+                            <div class="admin-lesson-view-details">
                                 <div><strong>Khóa học</strong><br><a href="courses.php?action=view&id=<?php echo $lesson_data['course_id']; ?>" style="color: var(--primary); font-weight: 700;"><?php echo htmlspecialchars($lesson_data['course_title']); ?></a></div>
                                 <div><strong>Thứ tự</strong><br><span style="color: var(--text-muted);"><?php echo htmlspecialchars($lesson_data['order_index']); ?></span></div>
                                 <div><strong>Thời lượng</strong><br><span style="color: var(--text-muted);"><?php echo htmlspecialchars($lesson_data['duration']); ?> phút</span></div>
                                 <div><strong>Học thử miễn phí</strong><br><span style="color: var(--text-muted);"><?php echo $lesson_data['is_free'] ? 'Có' : 'Không'; ?></span></div>
                                 <div><strong>Video URL</strong><br><span style="color: var(--text-muted); word-break: break-all;"><?php echo htmlspecialchars($lesson_data['video_url'] ?: 'Chưa cập nhật'); ?></span></div>
                             </div>
-                            <a href="lessons.php?action=edit&id=<?php echo $lesson_id; ?>" class="btn btn-primary" style="height: 40px; margin-top: 20px; width: 100%;">Sửa bài học</a>
-                        </div>
+                            <a href="lessons.php?action=edit&id=<?php echo $lesson_id; ?>" class="btn btn-primary admin-lesson-view-edit">Sửa bài học</a>
+                        </aside>
                     </div>
                 </div>
             <?php endif; ?>
@@ -637,8 +742,9 @@ if (isset($_GET['success'])) {
                         </div>
 
                         <div class="form-group" style="margin-bottom: 20px;">
-                            <label for="video_url">Đường dẫn tệp Video phát giảng dạy (URL)</label>
-                            <input type="text" id="video_url" name="video_url" class="form-control" value="<?php echo htmlspecialchars($lesson_data['video_url'] ?? 'https://www.w3schools.com/html/mov_bbb.mp4'); ?>" required placeholder="https://example.com/video.mp4">
+                            <label for="video_url">Đường dẫn Video MP4, YouTube hoặc Google Drive (URL)</label>
+                            <input type="text" id="video_url" name="video_url" class="form-control" value="<?php echo htmlspecialchars($lesson_data['video_url'] ?? 'https://www.w3schools.com/html/mov_bbb.mp4'); ?>" required placeholder="YouTube, Google Drive hoặc đường dẫn MP4">
+                            <small style="display:block;margin-top:7px;color:var(--text-muted);">Video Google Drive cần bật quyền “Bất kỳ ai có liên kết” để học viên xem được.</small>
                         </div>
 
                         <div class="form-group" style="margin-bottom: 30px; display: flex; align-items: center; gap: 8px;">
@@ -721,5 +827,6 @@ if (isset($_GET['success'])) {
         adminFilterMobileQuery.addEventListener?.('change', syncAdminFilterMode);
     </script>
     <script src="../assets/js/admin-confirm.js"></script>
+    <script src="../assets/js/admin-menu.js"></script>
 </body>
 </html>

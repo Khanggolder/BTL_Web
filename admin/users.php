@@ -434,7 +434,7 @@ if ($action === 'list') {
                                         <th style="padding:12px 16px;">Điện thoại</th>
                                         <th style="padding:12px 16px;">Vai trò</th>
                                         <th style="padding:12px 16px;">Trạng thái</th>
-                                        <th style="padding:12px 16px;text-align:center;">Thao tác</th>
+                                        <th style="padding:12px 16px;text-align:center;">Chỉnh sửa</th>
                                         <th style="padding:12px 16px;text-align:center;">Xóa</th>
                                     </tr>
                                 </thead>
@@ -526,5 +526,6 @@ if ($action === 'list') {
         lucide.createIcons();
     </script>
     <script src="../assets/js/admin-confirm.js"></script>
+    <script src="../assets/js/admin-menu.js"></script>
 </body>
 </html>

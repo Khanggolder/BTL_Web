@@ -361,7 +361,7 @@ if ($has_discount) {
 
         
         <div style="aspect-ratio: 16/9; background-color: black; width: 100%; display: flex; align-items: center; justify-content: center;">
-            <video id="modal-video-player" controls autoplay style="width: 100%; height: 100%; object-fit: contain;">
+            <video id="modal-video-player" controls controlslist="nodownload noremoteplayback" disablepictureinpicture autoplay oncontextmenu="return false;" style="width: 100%; height: 100%; object-fit: contain;">
                 Trình duyệt của bạn không hỗ trợ thẻ video.
             </video>
         </div>

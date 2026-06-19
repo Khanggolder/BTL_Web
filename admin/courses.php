@@ -328,7 +328,7 @@ if ($action === 'list') {
         <main class="admin-container">
             
             
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+            <div class="admin-courses-page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
                 <div>
                     <h1 style="font-size: 30px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">
                         <?php 
@@ -342,14 +342,16 @@ if ($action === 'list') {
                 </div>
 
                 <?php if ($action === 'list'): ?>
-                    <a href="courses.php?action=add" class="btn btn-primary" style="height: 42px; font-size: 14px; border-radius: var(--radius-sm);">
+                    <a href="courses.php?action=add" class="btn btn-primary admin-courses-top-btn" style="height: 42px; font-size: 14px; border-radius: var(--radius-sm);">
                         <i data-lucide="plus-circle" style="width: 18px; height: 18px;"></i>
                         Tạo khóa học mới
                     </a>
                 <?php else: ?>
-                    <a href="courses.php" class="btn btn-outline" style="height: 42px; font-size: 14px; border-radius: var(--radius-sm);">
+                    <a href="courses.php" class="btn btn-outline admin-courses-top-btn" style="height: 42px; font-size: 14px; border-radius: var(--radius-sm);">
                         <i data-lucide="arrow-left" style="width: 18px; height: 18px;"></i>
-                        Quay lại danh sách
+                        <span class="lesson-back-text">
+                            <span>Quay lại</span>
+                        </span>
                     </a>
                 <?php endif; ?>
             </div>
@@ -702,5 +704,6 @@ if ($action === 'list') {
         lucide.createIcons();
     </script>
     <script src="../assets/js/admin-confirm.js"></script>
+    <script src="../assets/js/admin-menu.js"></script>
 </body>
 </html>

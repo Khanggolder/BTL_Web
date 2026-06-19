@@ -784,5 +784,6 @@ try {
         updateDashboardBulkToolbar();
     </script>
     <script src="../assets/js/admin-confirm.js"></script>
+    <script src="../assets/js/admin-menu.js"></script>
 </body>
 </html>

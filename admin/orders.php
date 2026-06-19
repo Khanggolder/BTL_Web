@@ -237,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_order'])) {
     }
 }
 
-$users = $pdo->query("SELECT id, full_name, email FROM users WHERE active = 1 ORDER BY full_name")->fetchAll() ?: [];
+$users = $pdo->query("SELECT id, full_name, email, phone FROM users WHERE active = 1 ORDER BY full_name")->fetchAll() ?: [];
 $courses = $pdo->query("SELECT id, title, price, discount_price FROM courses ORDER BY title")->fetchAll() ?: [];
 
 if (($action === 'edit' || $action === 'view') && $order_id > 0) {
@@ -302,6 +302,133 @@ if ($action === 'list') {
     <title>Quản lý đơn hàng - LearnHub Admin</title>
     <link rel="stylesheet" href="../assets/css/admin.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .admin-order-option-search {
+            height: 42px;
+            margin: 8px 0;
+        }
+
+        .admin-order-save-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .admin-order-save-btn {
+            width: 100%;
+            height: 46px;
+            justify-content: center;
+        }
+
+        .admin-user-combobox {
+            position: relative;
+            margin-top: 8px;
+        }
+
+        .admin-user-combobox-input {
+            position: relative;
+        }
+
+        .admin-user-combobox-input > svg {
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            width: 17px;
+            height: 17px;
+            color: var(--text-muted);
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .admin-user-combobox-input input {
+            min-height: 50px;
+            height: 50px;
+            padding: 12px 16px 12px 38px;
+        }
+
+        .admin-user-combobox-results {
+            position: absolute;
+            top: calc(100% + 6px);
+            right: 0;
+            left: 0;
+            z-index: 30;
+            display: none;
+            max-height: 240px;
+            overflow-y: auto;
+            padding: 6px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: white;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .admin-user-combobox.is-open .admin-user-combobox-results {
+            display: grid;
+            gap: 3px;
+        }
+
+        .admin-user-combobox-results button {
+            width: 100%;
+            padding: 10px 12px;
+            border: 0;
+            border-radius: 5px;
+            background: transparent;
+            color: var(--text-main);
+            font: inherit;
+            font-size: 13px;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .admin-user-combobox-results button:hover,
+        .admin-user-combobox-results button.is-selected {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .admin-user-combobox-results p {
+            margin: 0;
+            padding: 12px;
+            color: var(--text-muted);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        #order-user-options [hidden],
+        .admin-order-course-options [hidden] {
+            display: none !important;
+        }
+
+        @media (max-width: 900px) {
+            .admin-user-combobox-input input {
+                box-sizing: border-box !important;
+                min-height: 46px !important;
+                height: 46px !important;
+                padding: 8px 12px 8px 38px !important;
+                font-size: 13px !important;
+                line-height: 20px !important;
+            }
+
+            .admin-user-combobox-results {
+                position: static;
+                width: 100%;
+                max-height: 180px;
+                margin-top: 6px;
+                box-shadow: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .admin-order-save-row,
+            .admin-order-save-btn {
+                width: 100%;
+            }
+
+            .admin-order-course-options {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="admin-wrapper">
@@ -381,36 +508,34 @@ if ($action === 'list') {
                 <div class="admin-table-card">
                     <form method="POST" action="orders.php?action=<?php echo htmlspecialchars($action); ?><?php echo $order_id ? '&id=' . $order_id : ''; ?>">
                         <input type="hidden" name="save_order" value="1">
+                        <div class="admin-order-save-row">
+                            <button class="btn btn-primary admin-order-save-btn" type="submit"><i data-lucide="save" style="width:18px;height:18px;"></i> Lưu đơn hàng</button>
+                        </div>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="user_id">Học viên</label>
+                                <label for="user_search">Học viên</label>
                                 <?php
+                                    $selected_user_id = $action === 'edit' ? (int)($order_data['user_id'] ?? 0) : 0;
                                     $selected_user_label = '';
                                     foreach ($users as $u) {
-                                        if ((int)($order_data['user_id'] ?? 0) === (int)$u['id'] || $selected_user_label === '') {
-                                            $selected_user_label = $u['full_name'] . ' - ' . $u['email'];
-                                            if ((int)($order_data['user_id'] ?? 0) === (int)$u['id']) break;
+                                        if ($selected_user_id === (int)$u['id']) {
+                                            $selected_user_label = $u['full_name'] . ' - ' . $u['email'] . (!empty($u['phone']) ? ' - ' . $u['phone'] : '');
+                                            break;
                                         }
                                     }
                                 ?>
-                                <select class="form-control admin-mobile-native-select" id="user_id" name="user_id" required>
-                                    <?php foreach ($users as $u): ?>
-                                        <option value="<?php echo $u['id']; ?>" <?php echo (int)($order_data['user_id'] ?? 0) === (int)$u['id'] ? 'selected' : ''; ?>>
-                                            <?php echo htmlspecialchars($u['full_name'] . ' - ' . $u['email']); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <div class="admin-custom-select admin-mobile-custom-select" data-mobile-select>
-                                    <input type="hidden" name="user_id" value="<?php echo (int)($order_data['user_id'] ?? ($users[0]['id'] ?? 0)); ?>" disabled>
-                                    <button type="button" class="admin-custom-select-toggle" aria-expanded="false">
-                                        <span><?php echo htmlspecialchars($selected_user_label); ?></span>
-                                        <i data-lucide="chevron-down"></i>
-                                    </button>
-                                    <div class="admin-custom-select-menu">
+                                <div class="admin-user-combobox" data-user-combobox>
+                                    <input type="hidden" id="user_id" name="user_id" value="<?php echo $selected_user_id; ?>">
+                                    <div class="admin-user-combobox-input">
+                                        <i data-lucide="search"></i>
+                                        <input type="search" id="user_search" class="form-control" data-user-search value="<?php echo htmlspecialchars($selected_user_label); ?>" placeholder="Tìm theo tên, email hoặc số điện thoại..." autocomplete="off" required aria-controls="order-user-options" aria-expanded="false">
+                                    </div>
+                                    <div class="admin-user-combobox-results" id="order-user-options">
                                         <?php foreach ($users as $u): ?>
-                                            <?php $user_label = $u['full_name'] . ' - ' . $u['email']; ?>
-                                            <button type="button" data-value="<?php echo $u['id']; ?>" class="<?php echo (int)($order_data['user_id'] ?? 0) === (int)$u['id'] ? 'is-selected' : ''; ?>"><?php echo htmlspecialchars($user_label); ?></button>
+                                            <?php $user_label = $u['full_name'] . ' - ' . $u['email'] . (!empty($u['phone']) ? ' - ' . $u['phone'] : ''); ?>
+                                            <button type="button" data-user-option data-value="<?php echo $u['id']; ?>" class="<?php echo $selected_user_id === (int)$u['id'] ? 'is-selected' : ''; ?>"><?php echo htmlspecialchars($user_label); ?></button>
                                         <?php endforeach; ?>
+                                        <p data-user-empty hidden>Không tìm thấy học viên phù hợp.</p>
                                     </div>
                                 </div>
                             </div>
@@ -459,17 +584,18 @@ if ($action === 'list') {
                         </div>
                         <div class="form-group" style="margin-bottom:24px;">
                             <label>Khóa học trong đơn</label>
-                            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:8px;">
+                            <input type="search" class="form-control admin-order-option-search" data-course-filter placeholder="Tìm khóa học theo tên..." autocomplete="off">
+                            <div class="admin-order-course-options" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:8px;">
                                 <?php foreach ($courses as $c): ?>
                                     <?php $price = $c['discount_price'] > 0 ? $c['discount_price'] : $c['price']; ?>
-                                    <label style="display:flex;align-items:center;gap:8px;background:var(--bg-main);border:1px solid var(--border);border-radius:8px;padding:10px;font-weight:600;">
+                                    <label data-course-option style="display:flex;align-items:center;gap:8px;background:var(--bg-main);border:1px solid var(--border);border-radius:8px;padding:10px;font-weight:600;">
                                         <input type="checkbox" name="course_ids[]" value="<?php echo $c['id']; ?>" <?php echo in_array((int)$c['id'], $order_course_ids, true) ? 'checked' : ''; ?>>
                                         <span><?php echo htmlspecialchars($c['title']); ?><br><small style="color:var(--text-muted);"><?php echo number_format($price, 0, ',', '.'); ?>d</small></span>
                                     </label>
                                 <?php endforeach; ?>
                             </div>
                         </div>
-                        <button class="btn btn-primary" type="submit" style="width:100%;height:48px;"><i data-lucide="save" style="width:18px;height:18px;"></i> Lưu đơn hàng</button>
+
                     </form>
                 </div>
             <?php endif; ?>
@@ -604,6 +730,85 @@ if ($action === 'list') {
         syncAdminMobileSelectMode();
         adminMobileSelectQuery.addEventListener?.('change', syncAdminMobileSelectMode);
 
+        function normalizeOrderSearch(value) {
+            return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+        }
+
+        const userCombobox = document.querySelector('[data-user-combobox]');
+        if (userCombobox) {
+            const userSearch = userCombobox.querySelector('[data-user-search]');
+            const userIdInput = userCombobox.querySelector('input[name="user_id"]');
+            const userOptions = Array.from(userCombobox.querySelectorAll('[data-user-option]'));
+            const userEmpty = userCombobox.querySelector('[data-user-empty]');
+
+            function filterUserOptions(query) {
+                let visibleCount = 0;
+                const normalizedQuery = normalizeOrderSearch(query);
+                userOptions.forEach(function(option) {
+                    const visible = normalizedQuery === '' || normalizeOrderSearch(option.textContent).includes(normalizedQuery);
+                    option.hidden = !visible;
+                    if (visible) visibleCount++;
+                });
+                if (userEmpty) userEmpty.hidden = visibleCount > 0;
+            }
+
+            function openUserCombobox(showAll) {
+                if (showAll) filterUserOptions('');
+                userCombobox.classList.add('is-open');
+                userSearch.setAttribute('aria-expanded', 'true');
+            }
+
+            function closeUserCombobox() {
+                userCombobox.classList.remove('is-open');
+                userSearch.setAttribute('aria-expanded', 'false');
+            }
+
+            userSearch.addEventListener('focus', function() {
+                userSearch.select();
+                openUserCombobox(true);
+            });
+
+            userSearch.addEventListener('click', function(event) {
+                event.stopPropagation();
+                openUserCombobox(false);
+            });
+
+            userSearch.addEventListener('input', function() {
+                userIdInput.value = '';
+                userSearch.setCustomValidity('Vui lòng chọn một học viên trong danh sách.');
+                filterUserOptions(userSearch.value);
+                openUserCombobox(false);
+            });
+
+            userOptions.forEach(function(option) {
+                option.addEventListener('click', function() {
+                    userIdInput.value = option.dataset.value || '';
+                    userSearch.value = option.textContent.trim();
+                    userSearch.setCustomValidity('');
+                    userOptions.forEach(function(item) {
+                        item.classList.toggle('is-selected', item === option);
+                    });
+                    closeUserCombobox();
+                });
+            });
+
+            userCombobox.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+
+            document.addEventListener('click', closeUserCombobox);
+        }
+
+        const courseFilter = document.querySelector('[data-course-filter]');
+        if (courseFilter) {
+            courseFilter.addEventListener('input', function() {
+                const query = normalizeOrderSearch(courseFilter.value);
+                document.querySelectorAll('[data-course-option]').forEach(function(option) {
+                    option.hidden = query !== '' && !normalizeOrderSearch(option.textContent).includes(query);
+                });
+            });
+        }
+
         const selectAllOrders = document.getElementById('select-all-orders');
         const bulkDeleteOrdersBtn = document.getElementById('bulk-delete-orders-btn');
         const orderCheckboxes = document.querySelectorAll('.order-row-check');
@@ -640,5 +845,6 @@ if ($action === 'list') {
         lucide.createIcons();
     </script>
     <script src="../assets/js/admin-confirm.js"></script>
+    <script src="../assets/js/admin-menu.js"></script>
 </body>
 </html>

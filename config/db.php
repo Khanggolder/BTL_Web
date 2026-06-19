@@ -2,6 +2,8 @@
 
 require_once __DIR__ . '/env.php';
 
+date_default_timezone_set('Asia/Ho_Chi_Minh');
+
 define('DB_HOST', env_value('DB_HOST', 'localhost'));
 define('DB_USER', env_value('DB_USER', 'root'));
 define('DB_PASS', env_value('DB_PASS', ''));
@@ -18,6 +20,7 @@ try {
             PDO::ATTR_EMULATE_PREPARES => false,
         ]
     );
+    $pdo->exec("SET time_zone = '+07:00'");
 } catch (PDOException $e) {
     die("Lỗi kết nối cơ sở dữ liệu: " . $e->getMessage());
 }

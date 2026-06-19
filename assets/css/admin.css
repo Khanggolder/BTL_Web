@@ -710,6 +710,49 @@
         font-size: 13px !important;
     }
 
+    .admin-courses-page-header {
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+
+    .admin-courses-page-header > div {
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+    }
+
+    .admin-container .admin-courses-top-btn {
+        flex: 0 0 auto !important;
+        min-width: 78px !important;
+        white-space: nowrap !important;
+        justify-content: center !important;
+    }
+
+    .admin-container .admin-courses-top-btn span,
+    .admin-container .admin-courses-top-btn .lesson-back-text span {
+        white-space: nowrap !important;
+        overflow-wrap: normal !important;
+        word-break: normal !important;
+    }
+    .admin-lessons-course-table {
+        min-width: 900px !important;
+    }
+
+    .admin-lessons-course-table th:last-child,
+    .admin-lessons-course-table td:last-child {
+        min-width: 150px !important;
+        width: 150px !important;
+    }
+
+    .admin-container .admin-lessons-view-btn {
+        white-space: nowrap !important;
+        min-width: 118px !important;
+        min-height: 32px !important;
+        height: 32px !important;
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+        justify-content: center !important;
+    }
+
     .admin-orders-page-header {
         align-items: flex-start !important;
         gap: 10px !important;
@@ -814,5 +857,60 @@
     .admin-confirm-actions {
         display: grid !important;
         grid-template-columns: 1fr !important;
+    }
+}
+
+.admin-mobile-menu-toggle {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .admin-wrapper {
+        grid-template-rows: auto minmax(0, 1fr) !important;
+        align-content: start !important;
+    }
+
+    .admin-sidebar {
+        align-self: start !important;
+    }
+
+    .admin-sidebar.is-collapsible:not(.is-open) {
+        gap: 0 !important;
+    }
+
+    .admin-sidebar-logo {
+        width: 100% !important;
+    }
+
+    .admin-mobile-menu-toggle {
+        margin-left: auto;
+        min-width: 76px;
+        height: 38px;
+        padding: 8px 10px;
+        border: 1px solid #334155;
+        border-radius: 6px;
+        background: #172033;
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .admin-mobile-menu-toggle svg {
+        width: 17px;
+        height: 17px;
+    }
+
+    .admin-sidebar.is-collapsible:not(.is-open) .admin-menu-list {
+        display: none !important;
+    }
+
+    .admin-sidebar.is-collapsible.is-open .admin-menu-list {
+        display: flex !important;
     }
 }
