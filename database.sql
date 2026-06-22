@@ -292,4 +292,87 @@ INSERT INTO `users` (`id`, `email`, `password`, `full_name`, `phone`, `avatar`, 
 ('23', 'hocvien19@learnhub.vn', '$2y$10$gtYpgAZBWsuPCAL4/Ef3oOkVCJbHD0zHjT/xXcFyFGZCl6AQzHdYi', 'Chu Phước', '0901000019', 'https://api.dicebear.com/7.x/adventurer/svg?seed=Chu%20%3F%3Fnh%20Ph%3Fc', '1', '2026-06-19 19:12:03', '2026-06-19 19:19:36'),
 ('24', 'hocvien20@learnhub.vn', '$2y$10$gtYpgAZBWsuPCAL4/Ef3oOkVCJbHD0zHjT/xXcFyFGZCl6AQzHdYi', 'Trọng Nghĩa', '0901000020', 'https://api.dicebear.com/7.x/adventurer/svg?seed=L%3Fm%20Tr%3Fng%20Ngh%3Fa', '1', '2026-06-19 19:12:03', '2026-06-19 19:19:23');
 
+
+INSERT INTO `orders` (`id`, `order_number`, `user_id`, `total_amount`, `status`, `payment_method`, `payment_transaction_id`, `momo_order_id`, `momo_request_id`, `momo_transaction_id`, `created_at`, `paid_at`, `updated_at`) VALUES
+('46', 'LH-DEMO-2601-001', '5', '218000.00', 'COMPLETED', 'MOMO', 'DEMO-TXN-001', 'DEMO-MOMO-ORDER-001', 'DEMO-MOMO-REQUEST-001', 'DEMO-MOMO-TRANS-001', '2026-01-08 09:15:00', '2026-01-08 09:17:00', '2026-01-08 09:17:00'),
+('47', 'LH-DEMO-2601-002', '6', '199000.00', 'COMPLETED', 'BANK_TRANSFER', 'DEMO-TXN-002', NULL, NULL, NULL, '2026-01-22 14:30:00', '2026-01-22 14:33:00', '2026-01-22 14:33:00'),
+('48', 'LH-DEMO-2601-003', '7', '139000.00', 'CANCELLED', 'VNPAY', NULL, NULL, NULL, NULL, '2026-01-28 19:10:00', NULL, '2026-01-28 19:10:00'),
+('49', 'LH-DEMO-2602-004', '8', '288000.00', 'COMPLETED', 'CREDIT_CARD', 'DEMO-TXN-004', NULL, NULL, NULL, '2026-02-05 08:45:00', '2026-02-05 08:50:00', '2026-02-05 08:50:00'),
+('50', 'LH-DEMO-2602-005', '9', '219000.00', 'COMPLETED', 'PAYPAL', NULL, NULL, NULL, NULL, '2026-02-18 16:20:00', '2026-06-23 00:17:46', '2026-06-23 00:17:46'),
+('51', 'LH-DEMO-2603-006', '10', '209000.00', 'COMPLETED', 'MOMO', 'DEMO-TXN-006', 'DEMO-MOMO-ORDER-006', 'DEMO-MOMO-REQUEST-006', 'DEMO-MOMO-TRANS-006', '2026-03-04 10:05:00', '2026-03-04 10:07:00', '2026-03-04 10:07:00'),
+('52', 'LH-DEMO-2603-007', '11', '368000.00', 'COMPLETED', 'BANK_TRANSFER', 'DEMO-TXN-007', NULL, NULL, NULL, '2026-03-20 13:40:00', '2026-03-20 13:43:00', '2026-03-20 13:43:00'),
+('53', 'LH-DEMO-2603-008', '12', '229000.00', 'CANCELLED', 'VNPAY', NULL, NULL, NULL, NULL, '2026-03-25 20:15:00', NULL, '2026-03-25 20:15:00'),
+('54', 'LH-DEMO-2604-009', '13', '239000.00', 'COMPLETED', 'CREDIT_CARD', 'DEMO-TXN-009', NULL, NULL, NULL, '2026-04-07 09:35:00', '2026-04-07 09:40:00', '2026-04-07 09:40:00'),
+('55', 'LH-DEMO-2604-010', '14', '318000.00', 'COMPLETED', 'PAYPAL', 'DEMO-TXN-010', NULL, NULL, NULL, '2026-04-19 15:50:00', '2026-04-19 15:56:00', '2026-04-19 15:56:00'),
+('56', 'LH-DEMO-2605-011', '15', '129000.00', 'COMPLETED', 'MOMO', 'DEMO-TXN-011', 'DEMO-MOMO-ORDER-011', 'DEMO-MOMO-REQUEST-011', 'DEMO-MOMO-TRANS-011', '2026-05-03 11:25:00', '2026-05-03 11:27:00', '2026-05-03 11:27:00'),
+('57', 'LH-DEMO-2605-012', '16', '79000.00', 'CANCELLED', 'BANK_TRANSFER', NULL, NULL, NULL, NULL, '2026-05-15 18:05:00', NULL, '2026-05-15 18:05:00'),
+('58', 'LH-DEMO-2605-013', '17', '358000.00', 'COMPLETED', 'VNPAY', 'DEMO-TXN-013', NULL, NULL, NULL, '2026-05-27 08:30:00', '2026-05-27 08:34:00', '2026-05-27 08:34:00'),
+('59', 'LH-DEMO-2606-014', '18', '249000.00', 'COMPLETED', 'CREDIT_CARD', 'DEMO-TXN-014', NULL, NULL, NULL, '2026-06-02 10:40:00', '2026-06-02 10:45:00', '2026-06-02 10:45:00'),
+('60', 'LH-DEMO-2606-015', '19', '149000.00', 'COMPLETED', 'PAYPAL', NULL, NULL, NULL, NULL, '2026-06-05 14:15:00', '2026-06-23 00:17:43', '2026-06-23 00:17:43'),
+('61', 'LH-DEMO-2606-016', '20', '278000.00', 'COMPLETED', 'MOMO', NULL, 'DEMO-MOMO-ORDER-016', 'DEMO-MOMO-REQUEST-016', NULL, '2026-06-08 17:30:00', '2026-06-23 00:17:40', '2026-06-23 00:17:40'),
+('62', 'LH-DEMO-2606-017', '21', '199000.00', 'COMPLETED', 'BANK_TRANSFER', 'DEMO-TXN-017', NULL, NULL, NULL, '2026-06-12 09:20:00', '2026-06-12 09:23:00', '2026-06-12 09:23:00'),
+('63', 'LH-DEMO-2606-018', '22', '219000.00', 'COMPLETED', 'VNPAY', NULL, NULL, NULL, NULL, '2026-06-16 13:05:00', '2026-06-23 00:17:38', '2026-06-23 00:17:38'),
+('64', 'LH-DEMO-2606-019', '23', '268000.00', 'COMPLETED', 'CREDIT_CARD', NULL, NULL, NULL, NULL, '2026-06-20 19:45:00', '2026-06-23 00:17:35', '2026-06-23 00:17:35'),
+('65', 'LH-DEMO-2606-020', '24', '209000.00', 'CANCELLED', 'PAYPAL', NULL, NULL, NULL, NULL, '2026-06-22 21:10:00', NULL, '2026-06-22 21:10:00');
+
+INSERT INTO `order_items` (`id`, `order_id`, `course_id`, `course_name`, `price`, `original_price`) VALUES
+('46', '46', '4', 'JavaScript hiện đại từ cơ bản đến chuyên sâu', '119000.00', '149000.00'),
+('47', '46', '1', 'Lập trình Web toàn diện với HTML, CSS và JavaScript', '99000.00', '129000.00'),
+('48', '47', '5', 'ReactJS thực chiến: Xây dựng ứng dụng thương mại điện tử', '199000.00', '259000.00'),
+('49', '48', '6', 'Vue.js 3 và Pinia cho người mới bắt đầu', '139000.00', '179000.00'),
+('50', '49', '7', 'Node.js và Express: Phát triển REST API', '189000.00', '239000.00'),
+('51', '49', '1', 'Lập trình Web toàn diện với HTML, CSS và JavaScript', '99000.00', '129000.00'),
+('52', '50', '8', 'Laravel 11: Xây dựng website bán hàng', '219000.00', '279000.00'),
+('53', '51', '9', 'Python Django toàn tập', '209000.00', '269000.00'),
+('54', '52', '10', 'Java Spring Boot và Microservices', '269000.00', '329000.00'),
+('55', '52', '1', 'Lập trình Web toàn diện với HTML, CSS và JavaScript', '99000.00', '129000.00'),
+('56', '53', '11', 'ASP.NET Core MVC thực hành', '229000.00', '289000.00'),
+('57', '54', '12', 'Flutter: Lập trình ứng dụng đa nền tảng', '239000.00', '299000.00'),
+('58', '55', '13', 'React Native từ cơ bản đến thực chiến', '219000.00', '279000.00'),
+('59', '55', '1', 'Lập trình Web toàn diện với HTML, CSS và JavaScript', '99000.00', '129000.00'),
+('60', '56', '14', 'SQL và thiết kế cơ sở dữ liệu', '129000.00', '169000.00'),
+('61', '57', '15', 'Git, GitHub và quy trình làm việc nhóm', '79000.00', '99000.00'),
+('62', '58', '16', 'Docker và Kubernetes cho Developer', '259000.00', '319000.00'),
+('63', '58', '1', 'Lập trình Web toàn diện với HTML, CSS và JavaScript', '99000.00', '129000.00'),
+('64', '59', '17', 'Triển khai ứng dụng trên AWS', '249000.00', '299000.00'),
+('65', '60', '18', 'UI UX Design dành cho lập trình viên', '149000.00', '189000.00'),
+('66', '61', '19', 'TypeScript chuyên sâu cho dự án lớn', '179000.00', '229000.00'),
+('67', '61', '1', 'Lập trình Web toàn diện với HTML, CSS và JavaScript', '99000.00', '129000.00'),
+('68', '62', '20', 'Cấu trúc dữ liệu và giải thuật với JavaScript', '199000.00', '249000.00'),
+('69', '63', '21', 'Bảo mật ứng dụng Web căn bản', '219000.00', '269000.00'),
+('70', '64', '22', 'Thiết kế RESTful API chuyên nghiệp', '169000.00', '219000.00'),
+('71', '64', '1', 'Lập trình Web toàn diện với HTML, CSS và JavaScript', '99000.00', '129000.00'),
+('72', '65', '23', 'Kiểm thử Web với PHPUnit và Playwright', '209000.00', '259000.00');
+
+INSERT INTO `enrollments` (`id`, `user_id`, `course_id`, `enrolled_at`, `progress`, `completed_at`, `active`) VALUES
+('9', '5', '4', '2026-06-23 00:16:18', '0', NULL, '1'),
+('10', '5', '1', '2026-06-23 00:16:18', '0', NULL, '1'),
+('11', '6', '5', '2026-06-23 00:16:18', '0', NULL, '1'),
+('12', '8', '7', '2026-06-23 00:16:18', '0', NULL, '1'),
+('13', '8', '1', '2026-06-23 00:16:18', '0', NULL, '1'),
+('14', '10', '9', '2026-06-23 00:16:18', '0', NULL, '1'),
+('15', '11', '10', '2026-06-23 00:16:18', '0', NULL, '1'),
+('16', '11', '1', '2026-06-23 00:16:18', '0', NULL, '1'),
+('17', '13', '12', '2026-06-23 00:16:18', '0', NULL, '1'),
+('18', '14', '13', '2026-06-23 00:16:18', '0', NULL, '1'),
+('19', '14', '1', '2026-06-23 00:16:18', '0', NULL, '1'),
+('20', '15', '14', '2026-06-23 00:16:18', '0', NULL, '1'),
+('21', '17', '16', '2026-06-23 00:16:18', '0', NULL, '1'),
+('22', '17', '1', '2026-06-23 00:16:18', '0', NULL, '1'),
+('23', '18', '17', '2026-06-23 00:16:18', '0', NULL, '1'),
+('24', '21', '20', '2026-06-23 00:16:18', '0', NULL, '1'),
+('25', '23', '22', '2026-06-23 00:17:36', '0', NULL, '1'),
+('26', '23', '1', '2026-06-23 00:17:36', '0', NULL, '1'),
+('27', '22', '21', '2026-06-23 00:17:38', '0', NULL, '1'),
+('28', '20', '19', '2026-06-23 00:17:41', '0', NULL, '1'),
+('29', '20', '1', '2026-06-23 00:17:41', '0', NULL, '1'),
+('30', '19', '18', '2026-06-23 00:17:43', '0', NULL, '1'),
+('31', '9', '8', '2026-06-23 00:17:46', '0', NULL, '1');
+
+UPDATE `courses` c
+SET `enrollment_count` = (
+    SELECT COUNT(*) FROM `enrollments` e
+    WHERE e.`course_id` = c.`id` AND e.`active` = 1
+);
+
 SET FOREIGN_KEY_CHECKS = 1;
