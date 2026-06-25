@@ -88,7 +88,7 @@ try {
         
         
         <div style="margin-bottom: 40px;">
-            <h1 style="font-size: 36px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">Tất cả Khóa học</h1>
+            <h1 style="font-size: 36px; font-weight: 900; margin-bottom: 8px; background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 42%, #22d3ee 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Tất cả Khóa học</h1>
             <p style="color: var(--text-muted); font-size: 16px;">Khám phá bộ sưu tập các khóa học lập trình thực chiến, chất lượng cao của chúng tôi.</p>
         </div>
 

@@ -116,11 +116,21 @@ require_once __DIR__ . '/includes/header.php';
     }
 
     .about-hero {
-        background: linear-gradient(135deg, #1e40af, #6d28d9, #be185d);
+        background: radial-gradient(circle at 18% 18%, rgba(96, 165, 250, 0.42), transparent 30%), radial-gradient(circle at 78% 8%, rgba(168, 85, 247, 0.28), transparent 28%), radial-gradient(circle at 55% 85%, rgba(34, 211, 238, 0.16), transparent 34%), linear-gradient(135deg, #071329 0%, #0b1d3a 46%, #172554 100%);
         color: white;
         padding: 74px 0 64px;
         position: relative;
         overflow: hidden;
+    }
+    .about-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image: radial-gradient(circle, rgba(255, 255, 255, 0.42) 1px, transparent 1.5px), radial-gradient(circle, rgba(147, 197, 253, 0.34) 1px, transparent 1.5px);
+        background-size: 90px 90px, 140px 140px;
+        background-position: 12px 20px, 58px 72px;
+        opacity: 0.3;
     }
 
     .about-hero-grid {
@@ -175,12 +185,12 @@ require_once __DIR__ . '/includes/header.php';
     }
 
     .about-hero-panel {
-        background: rgba(255, 255, 255, 0.14);
-        border: 1px solid rgba(255, 255, 255, 0.24);
+        background: rgba(15, 23, 42, 0.68);
+        border: 1px solid rgba(148, 163, 184, 0.28);
         border-radius: 16px;
         padding: 28px;
         box-shadow: var(--shadow-lg);
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(8px);
     }
 
     .about-panel-top {
@@ -208,7 +218,7 @@ require_once __DIR__ . '/includes/header.php';
     }
 
     .about-panel-body div {
-        background: rgba(15, 23, 42, 0.36);
+        background: rgba(2, 6, 23, 0.58);
         border: 1px solid rgba(255, 255, 255, 0.18);
         border-radius: 10px;
         padding: 18px;

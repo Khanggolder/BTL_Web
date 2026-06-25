@@ -27,94 +27,37 @@ try {
 ?>
 
 
-<section class="hero">
-    <div class="container">
-        <div class="hero-grid">
-            
-            
-            <div class="hero-content">
-                <div class="hero-tag">
-                    <i data-lucide="trending-up" style="width: 16px; height: 16px;"></i>
-                    <span>Nền tảng học trực tuyến #1</span>
-                </div>
-                
-                <h1 class="hero-title">
-                    Học không giới hạn
-                    <span>Tương lai của bạn</span>
-                </h1>
-                
-                <p class="hero-desc">
-                    Khởi đầu, chuyển đổi, hoặc thăng tiến sự nghiệp với hàng ngàn khóa học lập trình thực chiến từ các chuyên gia công nghệ hàng đầu.
-                </p>
-                
-                <div class="hero-btns">
-                    <a href="courses.php" class="btn btn-primary">
-                        <span>Khám phá khóa học</span>
-                        <i data-lucide="play" style="width: 18px; height: 18px;"></i>
-                    </a>
-                    <a href="enterprise.php" class="btn btn-secondary" style="background-color: transparent; color: white; border-color: white;">Dành cho doanh nghiệp</a>
-                </div>
+<section class="hero cinematic-hero">
+    <video class="hero-video" autoplay loop muted playsinline aria-hidden="true">
+        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+
+    <div class="container hero-inner">
+        <div class="hero-content">
+            <div class="hero-tag liquid-glass animate-fade-rise">
+                <i data-lucide="sparkles" style="width: 16px; height: 16px;"></i>
+                <span>LearnHub</span>
             </div>
 
-            
-            <div class="hero-image">
-                <div style="position: relative;">
-                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600" alt="Học viên học tập">
-                    
-                    
-                    <div class="floating-widget fw-top">
-                        <div class="fw-icon fw-green">
-                            <i data-lucide="award"></i>
-                        </div>
-                        <div>
-                            <h4 style="font-weight: 800; font-size: 18px; margin: 0;">150+</h4>
-                            <p style="font-size: 12px; color: var(--text-muted); margin: 0; font-weight: 600;">Giảng viên</p>
-                        </div>
-                    </div>
+            <h1 class="hero-title animate-fade-rise">
+                Học kỹ năng mới,
+                <span>mở khóa tương lai</span>
+                của bạn.
+            </h1>
 
-                    
-                    <div class="floating-widget fw-bottom">
-                        <div class="fw-icon fw-orange">
-                            <i data-lucide="smile"></i>
-                        </div>
-                        <div>
-                            <h4 style="font-weight: 800; font-size: 18px; margin: 0;">98%</h4>
-                            <p style="font-size: 12px; color: var(--text-muted); margin: 0; font-weight: 600;">Hài lòng</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <p class="hero-desc animate-fade-rise-delay">
+                Khám phá các khóa học trực tuyến chất lượng, học theo video, theo dõi tiến độ và bắt đầu hành trình phát triển kỹ năng ngay hôm nay.
+            </p>
 
-        </div>
-    </div>
-</section>
-
-
-<section style="padding: 50px 0;">
-    <div class="container" style="max-width: 1000px;">
-        <div class="stats-section">
-            <div class="stats-grid">
-                
-                <div class="stat-item">
-                    <div class="stat-number">70K+</div>
-                    <div class="stat-label">Học viên tin tưởng</div>
-                </div>
-
-                <div class="stat-item">
-                    <div class="stat-number">500+</div>
-                    <div class="stat-label">Khóa học phong phú</div>
-                </div>
-
-                <div class="stat-item">
-                    <div class="stat-number">150+</div>
-                    <div class="stat-label">Giảng viên kỳ cựu</div>
-                </div>
-
-                <div class="stat-item">
-                    <div class="stat-number">98%</div>
-                    <div class="stat-label">Độ hài lòng cao</div>
-                </div>
-
+            <div class="hero-btns animate-fade-rise-delay-2">
+                <a href="courses.php" class="btn hero-cta liquid-glass">
+                    <span>Khám phá khóa học</span>
+                    <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+                </a>
+                <a href="enterprise.php" class="btn hero-cta-secondary liquid-glass">
+                    <span>Dành cho doanh nghiệp</span>
+                </a>
             </div>
         </div>
     </div>
