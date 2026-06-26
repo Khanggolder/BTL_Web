@@ -438,6 +438,7 @@ if ($action === 'list') {
                 <li class="admin-menu-item"><a href="dashboard.php"><i data-lucide="layout-dashboard" style="width:18px;height:18px;"></i> Bảng điều khiển</a></li>
                 <li class="admin-menu-item"><a href="courses.php"><i data-lucide="book-open" style="width:18px;height:18px;"></i> Quản lý khóa học</a></li>
                 <li class="admin-menu-item"><a href="lessons.php"><i data-lucide="play-circle" style="width:18px;height:18px;"></i> Quản lý bài học</a></li>
+                
                 <li class="admin-menu-item active"><a href="orders.php"><i data-lucide="credit-card" style="width:18px;height:18px;"></i> Quản lý đơn hàng</a></li>
                 <li class="admin-menu-item" style="margin-top:20px;border-top:1px solid #1e293b;padding-top:16px;"><a href="users.php"><i data-lucide="users" style="width:18px;height:18px;"></i> Quản lý người dùng</a></li>
                 <li class="admin-menu-item" style="margin-top:20px;border-top:1px solid #1e293b;padding-top:16px;"><a href="../index.php" style="color:#ef4444;"><i data-lucide="arrow-left-right" style="width:18px;height:18px;"></i> Quay lại Client</a></li>

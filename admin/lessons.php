@@ -2,6 +2,8 @@
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/video_helper.php';
 require_once __DIR__ . '/../includes/auth_check.php';
+require_once __DIR__ . '/../includes/quiz_schema.php';
+ensure_quiz_schema($pdo);
 
 
 require_admin($pdo);
@@ -21,6 +23,11 @@ $level_labels = [
 
 $success_msg = '';
 $error_msg = '';
+function lesson_admin_redirect($params) {
+    $query = http_build_query($params);
+    header('Location: lessons.php' . ($query ? '?' . $query : ''));
+    exit();
+}
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -45,12 +52,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         VALUES (?, ?, ?, ?, ?, ?, ?)
                     ");
                     $stmt->execute([$course_id, $title, $content, $duration, $order_index, $video_url, $is_free]);
+                    $new_lesson_id = (int) $pdo->lastInsertId();
+                    $create_quiz_with_lesson = isset($_POST['create_quiz_with_lesson']) || trim($_POST['quiz_title'] ?? '') !== '';
+                    if ($create_quiz_with_lesson) {
+                        $quiz_title = trim($_POST['quiz_title'] ?? 'Quiz bài học');
+                        $quiz_description = trim($_POST['quiz_description'] ?? '');
+                        $quiz_pass_score = max(1, min(100, intval($_POST['quiz_pass_score'] ?? 70)));
+                        $quiz_active = isset($_POST['quiz_active']) ? 1 : 0;
+                        $stmt_quiz = $pdo->prepare("INSERT INTO quizzes (lesson_id, title, description, pass_score, active) VALUES (?, ?, ?, ?, ?)");
+                        $stmt_quiz->execute([$new_lesson_id, $quiz_title, $quiz_description, $quiz_pass_score, $quiz_active]);
+                    }
                     
                     
                     $stmt_up = $pdo->prepare("UPDATE courses SET total_lectures = total_lectures + 1, duration = duration + ? WHERE id = ?");
                     $stmt_up->execute([$duration, $course_id]);
 
-                    header("Location: lessons.php?course_id={$course_id}&success=" . urlencode("Thêm bài học mới thành công!"));
+                    header("Location: lessons.php?action=edit&id={$new_lesson_id}&success=" . urlencode("Đã thêm bài học mới."));
                     exit();
                 } elseif ($action === 'edit' && $lesson_id > 0) {
                     
@@ -74,13 +91,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                     }
 
-                    header("Location: lessons.php?course_id={$course_id}&success=" . urlencode("Cập nhật bài học thành công!"));
+                    header("Location: lessons.php?action=edit&id={$lesson_id}&success=" . urlencode("Cập nhật bài học thành công."));
                     exit();
                 }
             } catch (PDOException $e) {
                 $error_msg = 'Lỗi ghi nhận dữ liệu: ' . $e->getMessage();
             }
         }
+    }
+    if (isset($_POST['save_lesson_quiz'])) {
+        $post_lesson_id = intval($_POST['lesson_id'] ?? 0);
+        $quiz_id = intval($_POST['quiz_id'] ?? 0);
+        $title = trim($_POST['quiz_title'] ?? '');
+        $description = trim($_POST['quiz_description'] ?? '');
+        $pass_score = max(1, min(100, intval($_POST['quiz_pass_score'] ?? 70)));
+        $active = isset($_POST['quiz_active']) ? 1 : 0;
+        if ($post_lesson_id <= 0 || $title === '') lesson_admin_redirect(['action' => 'edit', 'id' => $post_lesson_id, 'error' => 'Vui lòng nhập tiêu đề quiz.']);
+        if ($quiz_id > 0) {
+            $stmt = $pdo->prepare("UPDATE quizzes SET title = ?, description = ?, pass_score = ?, active = ? WHERE id = ? AND lesson_id = ?");
+            $stmt->execute([$title, $description, $pass_score, $active, $quiz_id, $post_lesson_id]);
+            lesson_admin_redirect(['action' => 'edit', 'id' => $post_lesson_id, 'success' => 'Đã cập nhật quiz.']);
+        }
+        $stmt = $pdo->prepare("INSERT INTO quizzes (lesson_id, title, description, pass_score, active) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$post_lesson_id, $title, $description, $pass_score, $active]);
+        lesson_admin_redirect(['action' => 'edit', 'id' => $post_lesson_id, 'success' => 'Đã tạo quiz cho bài học.']);
+    }
+
+    if (isset($_POST['delete_lesson_quiz'])) {
+        $post_lesson_id = intval($_POST['lesson_id'] ?? 0);
+        $quiz_id = intval($_POST['quiz_id'] ?? 0);
+        $stmt = $pdo->prepare("DELETE FROM quizzes WHERE id = ? AND lesson_id = ?");
+        $stmt->execute([$quiz_id, $post_lesson_id]);
+        lesson_admin_redirect(['action' => 'edit', 'id' => $post_lesson_id, 'success' => 'Đã xóa quiz khỏi bài học.']);
+    }
+
+    if (isset($_POST['save_lesson_quiz_question'])) {
+        $post_lesson_id = intval($_POST['lesson_id'] ?? 0);
+        $quiz_id = intval($_POST['quiz_id'] ?? 0);
+        $question_id = intval($_POST['question_id'] ?? 0);
+        $question_text = trim($_POST['question_text'] ?? '');
+        $order_index = max(1, intval($_POST['question_order'] ?? 1));
+        $options = $_POST['options'] ?? [];
+        $correct = intval($_POST['correct_option'] ?? 0);
+        $clean_options = [];
+        foreach ($options as $index => $option_text) {
+            $option_text = trim($option_text);
+            if ($option_text !== '') $clean_options[] = ['text' => $option_text, 'correct' => (int) $index === $correct ? 1 : 0];
+        }
+        if ($quiz_id <= 0 || $question_text === '' || count($clean_options) < 2 || array_sum(array_column($clean_options, 'correct')) <= 0) lesson_admin_redirect(['action' => 'edit', 'id' => $post_lesson_id, 'error' => 'Mỗi câu hỏi cần nội dung, ít nhất 2 đáp án và 1 đáp án đúng.']);
+        $pdo->beginTransaction();
+        if ($question_id > 0) {
+            $stmt = $pdo->prepare("UPDATE quiz_questions SET question_text = ?, order_index = ? WHERE id = ? AND quiz_id = ?");
+            $stmt->execute([$question_text, $order_index, $question_id, $quiz_id]);
+            $pdo->prepare("DELETE FROM quiz_options WHERE question_id = ?")->execute([$question_id]);
+            $saved_question_id = $question_id;
+        } else {
+            $stmt = $pdo->prepare("INSERT INTO quiz_questions (quiz_id, question_text, order_index) VALUES (?, ?, ?)");
+            $stmt->execute([$quiz_id, $question_text, $order_index]);
+            $saved_question_id = (int) $pdo->lastInsertId();
+        }
+        $stmt = $pdo->prepare("INSERT INTO quiz_options (question_id, option_text, is_correct, order_index) VALUES (?, ?, ?, ?)");
+        foreach ($clean_options as $index => $option) $stmt->execute([$saved_question_id, $option['text'], $option['correct'], $index + 1]);
+        $pdo->commit();
+        lesson_admin_redirect(['action' => 'edit', 'id' => $post_lesson_id, 'success' => 'Đã lưu câu hỏi quiz.']);
+    }
+
+    if (isset($_POST['delete_lesson_quiz_question'])) {
+        $post_lesson_id = intval($_POST['lesson_id'] ?? 0);
+        $quiz_id = intval($_POST['quiz_id'] ?? 0);
+        $question_id = intval($_POST['question_id'] ?? 0);
+        $stmt = $pdo->prepare("DELETE FROM quiz_questions WHERE id = ? AND quiz_id = ?");
+        $stmt->execute([$question_id, $quiz_id]);
+        lesson_admin_redirect(['action' => 'edit', 'id' => $post_lesson_id, 'success' => 'Đã xóa câu hỏi quiz.']);
     }
 }
 
@@ -178,6 +260,39 @@ if (($action === 'edit' || $action === 'view') && $lesson_id > 0) {
     $selected_course_title = $lesson_data['course_title'];
 }
 
+$lesson_quiz = null;
+$lesson_quiz_questions = [];
+$lesson_quiz_options = [];
+$edit_quiz_question = null;
+$edit_quiz_options = [];
+if (($action === 'edit' || $action === 'view') && $lesson_id > 0) {
+    $stmt = $pdo->prepare("SELECT * FROM quizzes WHERE lesson_id = ? ORDER BY id DESC LIMIT 1");
+    $stmt->execute([$lesson_id]);
+    $lesson_quiz = $stmt->fetch();
+    if ($lesson_quiz) {
+        $stmt = $pdo->prepare("SELECT * FROM quiz_questions WHERE quiz_id = ? ORDER BY order_index ASC, id ASC");
+        $stmt->execute([(int) $lesson_quiz['id']]);
+        $lesson_quiz_questions = $stmt->fetchAll() ?: [];
+        if ($lesson_quiz_questions) {
+            $question_ids = array_column($lesson_quiz_questions, 'id');
+            $placeholders = implode(',', array_fill(0, count($question_ids), '?'));
+            $stmt = $pdo->prepare("SELECT * FROM quiz_options WHERE question_id IN ($placeholders) ORDER BY order_index ASC, id ASC");
+            $stmt->execute($question_ids);
+            foreach ($stmt->fetchAll() as $option) $lesson_quiz_options[(int) $option['question_id']][] = $option;
+        }
+        $edit_question_id = intval($_GET['quiz_question_id'] ?? 0);
+        if ($edit_question_id > 0) {
+            $stmt = $pdo->prepare("SELECT * FROM quiz_questions WHERE id = ? AND quiz_id = ?");
+            $stmt->execute([$edit_question_id, (int) $lesson_quiz['id']]);
+            $edit_quiz_question = $stmt->fetch();
+            if ($edit_quiz_question) {
+                $stmt = $pdo->prepare("SELECT * FROM quiz_options WHERE question_id = ? ORDER BY order_index ASC, id ASC");
+                $stmt->execute([$edit_question_id]);
+                $edit_quiz_options = $stmt->fetchAll() ?: [];
+            }
+        }
+    }
+}
 
 $lesson_youtube_id = extract_youtube_video_id($lesson_data['video_url'] ?? '');
 $lesson_google_drive_url = google_drive_preview_url($lesson_data['video_url'] ?? '');
@@ -627,6 +742,7 @@ if (isset($_GET['success'])) {
                                             <td style="padding: 12px 16px; text-align: center; display: flex; gap: 8px; justify-content: center;">
                                                 <a href="lessons.php?action=view&id=<?php echo $l['id']; ?>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;">Xem</a>
                                                 <a href="lessons.php?action=edit&id=<?php echo $l['id']; ?>" class="btn btn-outline" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;">Sửa</a>
+                                                <a href="lessons.php?action=edit&id=<?php echo $l['id']; ?>#lesson-quiz" class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;">Quiz</a>
                                                 <a href="lessons.php?action=delete&id=<?php echo $l['id']; ?>" class="btn btn-danger" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;" data-confirm="Bạn có chắc chắn muốn xóa bài giảng này?">Xóa</a>
                                             </td>
                                         </tr>
@@ -752,6 +868,19 @@ if (isset($_GET['success'])) {
                             <label for="is_free" style="margin-bottom: 0; cursor: pointer; font-weight: 700; color: var(--text-main);">Cho phép Học thử miễn phí (Free Trial)</label>
                         </div>
 
+
+                        <?php if ($action === 'add'): ?>
+                            <div class="admin-table-card lesson-inline-quiz-box">
+                                <h3>Quiz cho bài học này</h3>
+                                <label class="lesson-inline-check"><input type="checkbox" name="create_quiz_with_lesson" value="1"> Tạo quiz ngay khi lưu bài học</label>
+                                <div class="form-grid">
+                                    <div class="form-group"><label>Tiêu đề quiz</label><input type="text" name="quiz_title" class="form-control" placeholder="Ví dụ: Kiểm tra nhanh sau bài học"></div>
+                                    <div class="form-group"><label>Điểm đạt (%)</label><input type="number" name="quiz_pass_score" class="form-control" value="70" min="1" max="100"></div>
+                                </div>
+                                <div class="form-group"><label>Mô tả quiz</label><textarea name="quiz_description" class="form-control" style="height: 90px;" placeholder="Mô tả ngắn về quiz..."></textarea></div>
+                                <label class="lesson-inline-check"><input type="checkbox" name="quiz_active" value="1" checked> Bật quiz cho học viên</label>
+                            </div>
+                        <?php endif; ?>
                         <button type="submit" class="btn btn-primary" style="width: 100%; height: 48px;">
                             <i data-lucide="save" style="width: 18px; height: 18px;"></i>
                             Lưu bài giảng
@@ -759,6 +888,52 @@ if (isset($_GET['success'])) {
                     </form>
                 </div>
             <?php endif; ?>
+                <?php if ($action === 'edit'): ?>
+                    <div class="admin-table-card lesson-quiz-manager" id="lesson-quiz">
+                        <div class="lesson-quiz-head">
+                            <div><h2>Quiz của bài học</h2><p>Quản lý trực tiếp quiz, câu hỏi và đáp án ngay trong trang bài học.</p></div>
+                            <?php if ($lesson_quiz): ?><span class="quiz-status <?php echo $lesson_quiz['active'] ? 'is-on' : 'is-off'; ?>"><?php echo $lesson_quiz['active'] ? 'Đang bật' : 'Đang tắt'; ?></span><?php endif; ?>
+                        </div>
+                        <form method="POST" class="quiz-admin-form">
+                            <input type="hidden" name="save_lesson_quiz" value="1">
+                            <input type="hidden" name="lesson_id" value="<?php echo $lesson_id; ?>">
+                            <input type="hidden" name="quiz_id" value="<?php echo (int) ($lesson_quiz['id'] ?? 0); ?>">
+                            <div class="form-grid">
+                                <div class="form-group"><label>Tiêu đề quiz</label><input type="text" name="quiz_title" class="form-control" value="<?php echo htmlspecialchars($lesson_quiz['title'] ?? ''); ?>" required placeholder="Kiểm tra nhanh sau bài học"></div>
+                                <div class="form-group"><label>Điểm đạt (%)</label><input type="number" name="quiz_pass_score" class="form-control" value="<?php echo htmlspecialchars($lesson_quiz['pass_score'] ?? 70); ?>" min="1" max="100" required></div>
+                            </div>
+                            <div class="form-group"><label>Mô tả quiz</label><textarea name="quiz_description" class="form-control" style="height: 90px;"><?php echo htmlspecialchars($lesson_quiz['description'] ?? ''); ?></textarea></div>
+                            <label class="lesson-inline-check"><input type="checkbox" name="quiz_active" value="1" <?php echo empty($lesson_quiz) || !empty($lesson_quiz['active']) ? 'checked' : ''; ?>> Bật quiz cho học viên</label>
+                            <div class="lesson-quiz-actions"><button type="submit" class="btn btn-primary"><i data-lucide="save" style="width:18px;height:18px;"></i> Lưu quiz</button></div>
+                        </form>
+                        <?php if ($lesson_quiz): ?>
+                            <form method="POST" class="lesson-quiz-delete" data-confirm="Xóa quiz này và tất cả câu hỏi?">
+                                <input type="hidden" name="delete_lesson_quiz" value="1"><input type="hidden" name="lesson_id" value="<?php echo $lesson_id; ?>"><input type="hidden" name="quiz_id" value="<?php echo (int) $lesson_quiz['id']; ?>">
+                                <button type="submit" class="btn btn-danger"><i data-lucide="trash-2" style="width:18px;height:18px;"></i> Xóa quiz</button>
+                            </form>
+                            <div class="lesson-quiz-question-box">
+                                <h3><?php echo $edit_quiz_question ? 'Sửa câu hỏi' : 'Thêm câu hỏi'; ?></h3>
+                                <form method="POST" class="quiz-admin-form">
+                                    <input type="hidden" name="save_lesson_quiz_question" value="1"><input type="hidden" name="lesson_id" value="<?php echo $lesson_id; ?>"><input type="hidden" name="quiz_id" value="<?php echo (int) $lesson_quiz['id']; ?>"><input type="hidden" name="question_id" value="<?php echo (int) ($edit_quiz_question['id'] ?? 0); ?>">
+                                    <div class="form-group"><label>Nội dung câu hỏi</label><textarea name="question_text" class="form-control" style="height: 90px;" required><?php echo htmlspecialchars($edit_quiz_question['question_text'] ?? ''); ?></textarea></div>
+                                    <div class="form-group"><label>Thứ tự</label><input type="number" name="question_order" class="form-control" value="<?php echo htmlspecialchars($edit_quiz_question['order_index'] ?? (count($lesson_quiz_questions) + 1)); ?>" min="1" required></div>
+                                    <div class="quiz-option-editor">
+                                        <?php for ($i = 0; $i < 4; $i++): $option = $edit_quiz_options[$i] ?? ['option_text' => '', 'is_correct' => 0]; ?>
+                                            <label class="quiz-option-row"><input type="radio" name="correct_option" value="<?php echo $i; ?>" <?php echo !empty($option['is_correct']) || (!$edit_quiz_question && $i === 0) ? 'checked' : ''; ?>><input type="text" name="options[<?php echo $i; ?>]" class="form-control" value="<?php echo htmlspecialchars($option['option_text']); ?>" placeholder="Đáp án <?php echo $i + 1; ?>"></label>
+                                        <?php endfor; ?>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary"><i data-lucide="save" style="width:18px;height:18px;"></i> Lưu câu hỏi</button>
+                                </form>
+                            </div>
+                            <div class="lesson-quiz-list">
+                                <?php if (empty($lesson_quiz_questions)): ?><p class="quiz-empty">Quiz này chưa có câu hỏi.</p><?php endif; ?>
+                                <?php foreach ($lesson_quiz_questions as $question): ?>
+                                    <div class="quiz-question-item"><div><strong><?php echo (int) $question['order_index']; ?>. <?php echo htmlspecialchars($question['question_text']); ?></strong><ul><?php foreach (($lesson_quiz_options[(int) $question['id']] ?? []) as $option): ?><li class="<?php echo $option['is_correct'] ? 'is-correct' : ''; ?>"><?php echo htmlspecialchars($option['option_text']); ?></li><?php endforeach; ?></ul></div><div class="quiz-admin-actions"><a class="btn btn-outline" href="lessons.php?action=edit&id=<?php echo $lesson_id; ?>&quiz_question_id=<?php echo (int) $question['id']; ?>">Sửa</a><form method="POST" data-confirm="Xóa câu hỏi này?"><input type="hidden" name="delete_lesson_quiz_question" value="1"><input type="hidden" name="lesson_id" value="<?php echo $lesson_id; ?>"><input type="hidden" name="quiz_id" value="<?php echo (int) $lesson_quiz['id']; ?>"><input type="hidden" name="question_id" value="<?php echo (int) $question['id']; ?>"><button type="submit" class="btn btn-danger">Xóa</button></form></div></div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
 
         </main>
 

@@ -130,6 +130,7 @@ CREATE TABLE `lesson_progress` (
   `user_id` int NOT NULL,
   `lesson_id` int NOT NULL,
   `completed` tinyint(1) NOT NULL DEFAULT '0',
+  `video_completed` tinyint(1) NOT NULL DEFAULT '0',
   `video_position` int NOT NULL DEFAULT '0',
   `last_watched_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `completed_at` timestamp NULL DEFAULT NULL,
@@ -174,6 +175,115 @@ INSERT INTO `lessons` (`id`, `course_id`, `title`, `description`, `video_url`, `
 ('8', '3', 'Bài 1: Tại sao lại là ReactJS & Spring Boot?', 'Phân tích kiến trúc Single Page Application (SPA) kết hợp RESTful API.', 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', '22', '1', '1', '2026-05-31 15:00:17', '2026-06-20 00:25:05'),
 ('9', '3', 'Bài 2: Khởi tạo Project Spring Boot đầu tiên', 'Hướng dẫn sử dụng Spring Initializr để tạo một ứng dụng Maven Boot.', 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', '35', '2', '0', '2026-05-31 15:00:17', '2026-06-20 00:25:05');
 
+DROP TABLE IF EXISTS `quiz_attempt_answers`;
+DROP TABLE IF EXISTS `quiz_attempts`;
+DROP TABLE IF EXISTS `quiz_options`;
+DROP TABLE IF EXISTS `quiz_questions`;
+DROP TABLE IF EXISTS `quizzes`;
+CREATE TABLE `quizzes` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `lesson_id` int NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `pass_score` int NOT NULL DEFAULT '70',
+  `active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `lesson_id` (`lesson_id`),
+  CONSTRAINT `quizzes_lesson_fk` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `quizzes` (`id`, `lesson_id`, `title`, `description`, `pass_score`, `active`, `created_at`, `updated_at`) VALUES
+('1', '1', 'Kiểm tra nhanh sau bài tổng quan Web', 'Hoàn thành quiz để mở bài học tiếp theo.', '70', '1', '2026-06-25 10:00:00', '2026-06-25 10:00:00'),
+('2', '5', 'Kiểm tra nhanh sau bài Giới thiệu PHP và XAMPP', 'Quiz demo cho khóa Lập trình PHP & MySQL từ cơ bản đến nâng cao.', '70', '1', '2026-06-25 10:00:00', '2026-06-25 10:00:00');
+
+CREATE TABLE `quiz_questions` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `quiz_id` int NOT NULL,
+  `question_text` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `order_index` int NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `quiz_id` (`quiz_id`),
+  CONSTRAINT `quiz_questions_quiz_fk` FOREIGN KEY (`quiz_id`) REFERENCES `quizzes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `quiz_questions` (`id`, `quiz_id`, `question_text`, `order_index`, `created_at`) VALUES
+('1', '1', 'HTML thường được dùng để làm gì trong một trang web?', '1', '2026-06-25 10:00:00'),
+('2', '1', 'CSS có vai trò chính nào?', '2', '2026-06-25 10:00:00'),
+('3', '1', 'JavaScript giúp trang web có thêm khả năng gì?', '3', '2026-06-25 10:00:00'),
+('4', '2', 'PHP chủ yếu chạy ở đâu trong mô hình web truyền thống?', '1', '2026-06-25 10:00:00'),
+('5', '2', 'XAMPP thường được dùng để làm gì khi học PHP?', '2', '2026-06-25 10:00:00'),
+('6', '2', 'MySQL trong khóa học PHP thường đảm nhiệm vai trò nào?', '3', '2026-06-25 10:00:00');
+
+CREATE TABLE `quiz_options` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `question_id` int NOT NULL,
+  `option_text` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_correct` tinyint(1) NOT NULL DEFAULT '0',
+  `order_index` int NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `question_id` (`question_id`),
+  CONSTRAINT `quiz_options_question_fk` FOREIGN KEY (`question_id`) REFERENCES `quiz_questions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `quiz_options` (`id`, `question_id`, `option_text`, `is_correct`, `order_index`) VALUES
+('1', '1', 'Tạo cấu trúc và nội dung cho trang web', '1', '1'),
+('2', '1', 'Quản lý cơ sở dữ liệu', '0', '2'),
+('3', '1', 'Biên dịch ứng dụng di động', '0', '3'),
+('4', '1', 'Thiết kế hệ điều hành', '0', '4'),
+('5', '2', 'Tạo màu sắc, bố cục và phong cách hiển thị', '1', '1'),
+('6', '2', 'Lưu mật khẩu người dùng', '0', '2'),
+('7', '2', 'Chạy truy vấn SQL', '0', '3'),
+('8', '2', 'Quản trị máy chủ', '0', '4'),
+('9', '3', 'Tương tác động như xử lý sự kiện và cập nhật giao diện', '1', '1'),
+('10', '3', 'Thay thế hoàn toàn HTML', '0', '2'),
+('11', '3', 'Tạo địa chỉ IP cho website', '0', '3'),
+('12', '3', 'Nén toàn bộ database', '0', '4'),
+('13', '4', 'Trên máy chủ để xử lý logic trước khi trả HTML về trình duyệt', '1', '1'),
+('14', '4', 'Chỉ trong trình duyệt như CSS', '0', '2'),
+('15', '4', 'Trong card đồ họa của người dùng', '0', '3'),
+('16', '4', 'Chỉ trong hệ điều hành Android', '0', '4'),
+('17', '5', 'Tạo môi trường localhost gồm Apache, PHP và MySQL', '1', '1'),
+('18', '5', 'Thiết kế logo tự động', '0', '2'),
+('19', '5', 'Tăng tốc mạng Wi-Fi', '0', '3'),
+('20', '5', 'Biên dịch file CSS', '0', '4'),
+('21', '6', 'Lưu trữ và truy vấn dữ liệu cho website', '1', '1'),
+('22', '6', 'Tạo hiệu ứng hover cho nút bấm', '0', '2'),
+('23', '6', 'Chạy animation trên trình duyệt', '0', '3'),
+('24', '6', 'Tạo font chữ cho website', '0', '4');
+
+CREATE TABLE `quiz_attempts` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `quiz_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `score` decimal(5,2) NOT NULL DEFAULT '0.00',
+  `correct_count` int NOT NULL DEFAULT '0',
+  `total_questions` int NOT NULL DEFAULT '0',
+  `passed` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `quiz_id` (`quiz_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `quiz_attempts_quiz_fk` FOREIGN KEY (`quiz_id`) REFERENCES `quizzes` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `quiz_attempts_user_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `quiz_attempt_answers` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `attempt_id` int NOT NULL,
+  `question_id` int NOT NULL,
+  `option_id` int DEFAULT NULL,
+  `is_correct` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `attempt_id` (`attempt_id`),
+  KEY `question_id` (`question_id`),
+  KEY `option_id` (`option_id`),
+  CONSTRAINT `quiz_attempt_answers_attempt_fk` FOREIGN KEY (`attempt_id`) REFERENCES `quiz_attempts` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `quiz_attempt_answers_option_fk` FOREIGN KEY (`option_id`) REFERENCES `quiz_options` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `quiz_attempt_answers_question_fk` FOREIGN KEY (`question_id`) REFERENCES `quiz_questions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 DROP TABLE IF EXISTS `order_items`;
 CREATE TABLE `order_items` (
   `id` int NOT NULL AUTO_INCREMENT,
