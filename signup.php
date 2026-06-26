@@ -1,6 +1,6 @@
-<?php
-$page_title = "Đăng ký tài khoản";
-require_once __DIR__ . '/includes/header.php';
+﻿<?php
+require_once __DIR__ . '/config/db.php';
+
 
 $error = '';
 
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $pdo->commit();
                 
                 
-                header("Location: login.php?success=" . urlencode("Đăng ký tài khoản thành công! Vui lòng đăng nhập tại đây."));
+                header("Location: login.php?success=" . urlencode("Đăng ký tài khoản thành công! Vui lòng đăng nhập."));
                 exit();
             }
         } catch (PDOException $e) {
@@ -60,6 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+
+$page_title = "Đăng ký tài khoản";
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div class="container">

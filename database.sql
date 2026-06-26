@@ -142,10 +142,10 @@ CREATE TABLE `lesson_progress` (
   CONSTRAINT `lesson_progress_user_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=266 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `lesson_progress` (`id`, `user_id`, `lesson_id`, `completed`, `video_position`, `last_watched_at`, `completed_at`, `updated_at`) VALUES
-('3', '3', '5', '1', '0', '2026-06-20 02:01:13', '2026-06-20 00:25:25', '2026-06-20 02:01:13'),
-('30', '3', '6', '0', '0', '2026-06-19 21:24:51', NULL, '2026-06-19 21:24:51'),
-('245', '3', '1', '0', '0', '2026-06-20 00:40:56', NULL, '2026-06-20 00:40:56');
+INSERT INTO `lesson_progress` (`id`, `user_id`, `lesson_id`, `completed`, `video_completed`, `video_position`, `last_watched_at`, `completed_at`, `updated_at`) VALUES
+('3', '3', '5', '1', '1', '0', '2026-06-20 02:01:13', '2026-06-20 00:25:25', '2026-06-20 02:01:13'),
+('30', '3', '6', '0', '0', '0', '2026-06-19 21:24:51', NULL, '2026-06-19 21:24:51'),
+('245', '3', '1', '0', '0', '0', '2026-06-20 00:40:56', NULL, '2026-06-20 00:40:56');
 
 DROP TABLE IF EXISTS `lessons`;
 CREATE TABLE `lessons` (
