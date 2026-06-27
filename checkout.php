@@ -204,7 +204,7 @@ require_once __DIR__ . '/includes/header.php';
                         <h4 style="font-weight: 800; color: var(--text-main); margin-bottom: 12px; font-size: 15px;">Thông tin chuyển khoản Ngân hàng</h4>
                         <table style="width: 100%; border-collapse: collapse; font-size: 14px; line-height: 2;">
                             <tr>
-                                <td style="color: var(--text-muted); width: 140px;">Ngân hàng:</td>
+                                <td style="color: var(--text-muted); width: 32%; min-width: 0;">Ngân hàng:</td>
                                 <td><strong>Ngân hàng quân đội (MB Bank)</strong></td>
                             </tr>
                             <tr>
@@ -264,7 +264,7 @@ require_once __DIR__ . '/includes/header.php';
                 <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; max-height: 240px; overflow-y: auto; padding-right: 8px;">
                     <?php foreach ($cart_items as $item): ?>
                         <div style="display: flex; gap: 12px; align-items: center;">
-                            <img src="<?php echo htmlspecialchars($item['thumbnail'] ?: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=600'); ?>" style="width: 60px; aspect-ratio: 16/9; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                            <img src="<?php echo htmlspecialchars($item['thumbnail'] ?: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=600'); ?>" style="width: 18%; max-width: 60px; aspect-ratio: 16/9; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border);">
                             <div style="flex-grow: 1; overflow: hidden;">
                                 <h4 style="font-size: 13px; font-weight: 700; color: var(--text-main); margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="<?php echo htmlspecialchars($item['title']); ?>"><?php echo htmlspecialchars($item['title']); ?></h4>
                                 <span style="font-size: 12px; font-weight: 700; color: var(--primary);"><?php echo number_format($item['cart_price'], 0, ',', '.'); ?>đ</span>
@@ -322,6 +322,15 @@ require_once __DIR__ . '/includes/header.php';
             line-height: 1.6 !important;
         }
 
+
+        #checkout-form,
+        #checkout-form > div,
+        .cart-table-card,
+        .cart-summary-card {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+        }
         .cart-table-card,
         .cart-summary-card {
             padding: 18px !important;

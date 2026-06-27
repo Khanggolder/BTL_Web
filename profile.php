@@ -241,7 +241,7 @@ require_once __DIR__ . '/includes/header.php';
 
 <style>
     .profile-container {
-        max-width: 1320px;
+        width: min(94%, 1320px); max-width: 100%;
     }
 
     .profile-layout {
@@ -281,7 +281,7 @@ require_once __DIR__ . '/includes/header.php';
 
     .profile-orders-table {
         width: 100%;
-        min-width: 680px;
+        min-width: max-content;
     }
 
     .profile-orders-table th,
@@ -335,7 +335,7 @@ require_once __DIR__ . '/includes/header.php';
         }
 
         .profile-orders-table {
-            min-width: 640px;
+            min-width: max-content;
         }
     }
 
@@ -345,7 +345,7 @@ require_once __DIR__ . '/includes/header.php';
         }
 
         .profile-orders-table {
-            min-width: 560px;
+            min-width: 100%;
         }
     }
 </style>

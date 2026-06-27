@@ -96,7 +96,7 @@ try {
         <div class="filter-bar">
             
             
-            <form action="courses.php" method="GET" style="display: flex; gap: 12px; width: 100%; max-width: 500px;">
+            <form action="courses.php" method="GET" style="display: flex; gap: 12px; width: min(100%, 38rem); max-width: 100%;">
                 <input type="hidden" name="category" value="<?php echo htmlspecialchars($category); ?>">
                 <input type="hidden" name="level" value="<?php echo htmlspecialchars($level); ?>">
                 <input type="hidden" name="sort" value="<?php echo htmlspecialchars($sort); ?>">
@@ -504,6 +504,20 @@ try {
         .course-mobile-sort-menu a:hover {
             background-color: var(--primary);
             color: white;
+        }
+    }
+    @media (max-width: 640px) {
+        .filter-bar,
+        .filter-bar form,
+        .filter-left,
+        .filter-left form {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+        }
+
+        .filter-bar > form {
+            width: 100% !important;
         }
     }</style>
 

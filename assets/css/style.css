@@ -1351,7 +1351,7 @@ footer {
     }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 863px) {
     .grid-3, .stats-grid, .footer-grid {
         grid-template-columns: 1fr;
     }
@@ -1443,3 +1443,33 @@ footer {
 .quiz-learning-retry{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:14px 16px;border:1px solid #f59e0b;border-radius:8px;background:#451a03;color:#fde68a;font-weight:800}.quiz-learning-retry .btn{border-color:#fde68a;color:#fff;background:rgba(15,23,42,.35);white-space:nowrap}.quiz-learning-retry .btn:hover{background:#78350f;color:#fff;border-color:#fff}.quiz-learning-retry svg{width:17px;height:17px}@media(max-width:640px){.quiz-learning-retry{flex-direction:column;align-items:stretch}.quiz-learning-retry .btn{justify-content:center}}
 .quiz-learning-question{border:0;box-shadow:inset 0 0 0 1px #334155}.quiz-learning-question legend{display:block;width:100%;padding:0;margin:0 0 12px;line-height:1.45}.quiz-learning-question legend+label{margin-top:0}
 .quiz-learning-question h4{color:#fff;font-size:15px;font-weight:900;line-height:1.45;margin:0 0 14px;padding:0}.quiz-learning-question h4+.quiz-learning-option{margin-top:0}
+@media (max-width: 640px) {
+    .container,
+    .nav-container {
+        width: 92%;
+        max-width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .section,
+    .auth-wrapper,
+    .filter-bar,
+    .course-card,
+    .auth-card,
+    .cart-table-card,
+    .cart-summary-card,
+    .checkout-layout,
+    .profile-layout,
+    .profile-orders-card {
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .search-box,
+    .filter-select,
+    .form-control,
+    .btn {
+        max-width: 100%;
+    }
+}

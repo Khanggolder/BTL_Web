@@ -349,7 +349,7 @@ if ($has_discount) {
 
 
 <div id="preview-video-modal" style="display: none; position: fixed; inset: 0; background-color: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 20px; transition: var(--transition);">
-    <div style="background-color: white; width: 100%; max-width: 800px; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-lg); position: relative; animation: zoomIn 0.3s;">
+    <div style="background-color: white; width: min(94%, 800px); max-width: 100%; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-lg); position: relative; animation: zoomIn 0.3s;">
         
         
         <div style="padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">

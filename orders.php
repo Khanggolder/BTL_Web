@@ -29,7 +29,7 @@ require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div class="section" style="background-color: var(--bg-main); min-height: 80vh; padding: 40px 0;">
-    <div class="container" style="max-width: 1000px;">
+    <div class="container" style="width: min(94%, 1000px); max-width: 100%;">
         
         
         <a href="profile.php" style="display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); font-weight: 600; font-size: 14px; margin-bottom: 24px;">
@@ -158,6 +158,14 @@ require_once __DIR__ . '/includes/header.php';
 
 <style>
     @media (max-width: 576px) {
+
+        .order-card,
+        .order-item-row,
+        .order-item-name {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+        }
         .order-item-row {
             align-items: flex-start !important;
             flex-direction: column !important;
