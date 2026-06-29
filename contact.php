@@ -125,8 +125,8 @@ require_once __DIR__ . '/includes/header.php';
     }
 
     .contact-hero {
-        width: min(100%, 780px);
-        margin: 0 auto 38px;
+        width: 100%;
+        margin: 0 0 38px;
         text-align: center;
         padding: 28px 4%;
         border: 1px solid rgba(37, 99, 235, 0.12);
@@ -162,7 +162,7 @@ require_once __DIR__ . '/includes/header.php';
         font-size: 16px;
         line-height: 1.7;
         margin: 0 auto;
-        width: min(100%, 680px);
+        width: min(100%, 760px);
     }
 
     .contact-layout {
@@ -342,13 +342,14 @@ require_once __DIR__ . '/includes/header.php';
     }
 
     .contact-support-card svg {
-        width: 26px;
-        height: 26px;
+        width: 48px;
+        height: 48px;
         color: #ffffff;
         background: linear-gradient(135deg, #2563eb, #7c3aed);
         border-radius: 14px;
-        padding: 10px;
+        padding: 12px;
         margin-bottom: 14px;
+        box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22);
     }
 
     .contact-support-card strong {

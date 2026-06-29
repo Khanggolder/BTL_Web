@@ -46,7 +46,7 @@
 
             
             <div class="footer-bottom">
-                <p>&copy; <?php echo date('Y'); ?> LearnHub Education Platform. Bảo lưu mọi quyền.</p>
+                <p>&copy; <?php echo date('Y'); ?> LearnHub Education Platform</p>
                 <div style="display: flex; gap: 16px;">
                     <a href="#" style="color: inherit;"><i data-lucide="facebook" style="width: 20px; height: 20px;"></i></a>
                     <a href="#" style="color: inherit;"><i data-lucide="youtube" style="width: 20px; height: 20px;"></i></a>

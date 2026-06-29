@@ -141,7 +141,6 @@ require_once __DIR__ . '/includes/header.php';
         position: relative;
         z-index: 1;
     }
-
     .about-hero-content > span,
     .about-eyebrow {
         display: inline-flex;
@@ -151,7 +150,6 @@ require_once __DIR__ . '/includes/header.php';
         text-transform: uppercase;
         margin-bottom: 10px;
     }
-
     .about-hero-content > span {
         color: #ffffffdc;
     }
@@ -185,30 +183,33 @@ require_once __DIR__ . '/includes/header.php';
     }
 
     .about-hero-panel {
-        background: rgba(15, 23, 42, 0.68);
-        border: 1px solid rgba(148, 163, 184, 0.28);
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.96) 0%, rgba(239, 246, 255, 0.94) 45%, rgba(236, 253, 245, 0.92) 100%);
+        border: 1px solid rgba(147, 197, 253, 0.72);
         border-radius: 16px;
         padding: 28px;
-        box-shadow: var(--shadow-lg);
-        backdrop-filter: blur(8px);
+        box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
     }
 
     .about-panel-top {
         display: flex;
         align-items: center;
         gap: 12px;
-        color: white;
+        color: var(--text-main);
         font-size: 20px;
         font-weight: 900;
         padding-bottom: 18px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+        border-bottom: 1px solid rgba(37, 99, 235, 0.14);
         margin-bottom: 18px;
     }
 
     .about-panel-top svg {
         width: 34px;
         height: 34px;
-        color: #fbbf24;
+        color: #ffffff;
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        border-radius: 12px;
+        padding: 7px;
     }
 
     .about-panel-body {
@@ -218,27 +219,52 @@ require_once __DIR__ . '/includes/header.php';
     }
 
     .about-panel-body div {
-        background: rgba(2, 6, 23, 0.58);
-        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: linear-gradient(160deg, #eff6ff 0%, #ffffff 100%);
+        border: 1px solid rgba(37, 99, 235, 0.16);
         border-radius: 10px;
         padding: 18px;
     }
-
     .about-panel-body span {
         display: block;
-        color: white;
+        color: #2563eb;
         font-size: 28px;
         font-weight: 900;
         margin-bottom: 4px;
     }
 
+
+    .about-panel-body div:nth-child(2) {
+        background: linear-gradient(160deg, #f5f3ff 0%, #ffffff 100%);
+        border-color: rgba(124, 58, 237, 0.18);
+    }
+
+    .about-panel-body div:nth-child(2) span {
+        color: #7c3aed;
+    }
+
+    .about-panel-body div:nth-child(3) {
+        background: linear-gradient(160deg, #ecfdf5 0%, #ffffff 100%);
+        border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .about-panel-body div:nth-child(3) span {
+        color: #059669;
+    }
+
+    .about-panel-body div:nth-child(4) {
+        background: linear-gradient(160deg, #fff7ed 0%, #ffffff 100%);
+        border-color: rgba(245, 158, 11, 0.22);
+    }
+
+    .about-panel-body div:nth-child(4) span {
+        color: #d97706;
+    }
     .about-panel-body p {
-        color: rgba(255, 255, 255, 0.76);
+        color: var(--text-muted);
         font-size: 13px;
         font-weight: 700;
         margin: 0;
     }
-
     .about-section {
         padding: 64px 0;
     }
@@ -445,8 +471,7 @@ require_once __DIR__ . '/includes/header.php';
         .about-steps {
             grid-template-columns: 1fr;
         }
-
-        .about-section {
+    .about-section {
             padding: 46px 0;
         }
     }

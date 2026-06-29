@@ -83,7 +83,7 @@ try {
 }
 ?>
 
-<div class="section" style="background-color: var(--bg-main); min-height: 80vh; padding: 40px 0;">
+<div class="section" style="background: linear-gradient(180deg, #f8fbff 0%, #eef6ff 45%, #f0fdf4 100%); min-height: 80vh; padding: 40px 0;">
     <div class="container">
         
         

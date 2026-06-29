@@ -42,7 +42,7 @@ try {
 
             <h1 class="hero-title animate-fade-rise">
                 Học kỹ năng mới,
-                <span>mở khóa tương lai</span>
+                <span>mở khóa tương lai sáng</span>
                 của bạn.
             </h1>
 
@@ -64,7 +64,7 @@ try {
 </section>
 
 
-<section class="section" style="background-color: var(--bg-main);">
+<section class="section" style="background: linear-gradient(180deg, #f8fbff 0%, #eef6ff 48%, #f0fdf4 100%);">
     <div class="container">
         
         <div class="section-header">
@@ -164,5 +164,6 @@ try {
 
     </div>
 </section>
+
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
