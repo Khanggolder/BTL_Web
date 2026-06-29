@@ -86,7 +86,7 @@ require_once __DIR__ . '/includes/header.php';
                 <input type="email" id="email" name="email" placeholder="student@learnhub.com" value="<?php echo htmlspecialchars($email ?? ''); ?>" required>
 
                 <label for="password">Mật khẩu</label>
-                <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
+                <input type="password" id="password" name="password" placeholder="Nhập mật khẩu (123456)" required>
 
                 <button type="submit" class="learnhub-login-submit">
                     <i data-lucide="log-in"></i>

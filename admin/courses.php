@@ -257,6 +257,111 @@ if ($action === 'list') {
             padding: 40px;
         }
         
+
+        .admin-courses-table-wrap {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .admin-courses-table {
+            width: 100%;
+            max-width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .admin-courses-table th,
+        .admin-courses-table td {
+            padding: 11px 10px !important;
+            vertical-align: middle;
+        }
+
+        .admin-courses-table th {
+            white-space: nowrap;
+            font-size: 13px;
+        }
+
+        .admin-courses-table th:nth-child(1),
+        .admin-courses-table td:nth-child(1) {
+            width: 5% !important;
+            text-align: center;
+        }
+
+        .admin-courses-table th:nth-child(2),
+        .admin-courses-table td:nth-child(2) {
+            width: 24%;
+        }
+
+        .admin-courses-table th:nth-child(3),
+        .admin-courses-table td:nth-child(3) {
+            width: 13%;
+        }
+
+        .admin-courses-table th:nth-child(4),
+        .admin-courses-table td:nth-child(4) {
+            width: 12%;
+        }
+
+        .admin-courses-table th:nth-child(5),
+        .admin-courses-table td:nth-child(5),
+        .admin-courses-table th:nth-child(6),
+        .admin-courses-table td:nth-child(6) {
+            width: 7%;
+            text-align: center;
+        }
+
+        .admin-courses-table th:nth-child(7),
+        .admin-courses-table td:nth-child(7) {
+            width: 12%;
+        }
+
+        .admin-courses-table th:nth-child(8),
+        .admin-courses-table td:nth-child(8) {
+            width: 20%;
+        }
+
+        .admin-course-cell {
+            display: grid;
+            grid-template-columns: 22% minmax(0, 1fr);
+            gap: 4%;
+            align-items: center;
+            min-width: 0;
+        }
+
+        .admin-course-cell img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .admin-course-title {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+            color: var(--text-main);
+            overflow-wrap: anywhere;
+        }
+
+        .admin-course-actions {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            white-space: normal;
+        }
+
+        .admin-course-actions .btn {
+            flex: 0 0 auto;
+            padding: 5px 8px !important;
+            font-size: 11px !important;
+            height: 30px !important;
+        }
         .admin-table-card {
             background-color: white;
             border: 1px solid var(--border);
@@ -391,7 +496,8 @@ if ($action === 'list') {
                         <p style="color: var(--text-muted); font-style: italic; text-align: center; padding: 40px 0;">Không có khóa học nào được tìm thấy.</p>
                     <?php else: ?>
                         <form id="bulk-courses-form" method="POST" action="courses.php?search=<?php echo urlencode($search); ?>" data-confirm="Xóa các khóa học đã chọn? Toàn bộ bài học và dữ liệu liên quan sẽ bị xóa theo."></form>
-                        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+                        <div class="admin-courses-table-wrap">
+                        <table class="admin-courses-table">
                             <thead>
                                 <tr style="border-bottom: 1px solid var(--border); font-weight: 700; color: var(--text-main); background-color: var(--bg-main);">
                                     <th style="padding: 12px 16px; width:48px; text-align:center;"><input type="checkbox" id="select-all-courses" aria-label="Chọn tất cả khóa học"></th>
@@ -409,9 +515,11 @@ if ($action === 'list') {
                                     <?php $has_discount = $c['discount_price'] > 0 && $c['discount_price'] < $c['price']; ?>
                                     <tr style="border-bottom: 1px solid var(--border); font-weight: 500;">
                                         <td style="padding: 12px 16px; text-align:center;"><input type="checkbox" form="bulk-courses-form" class="course-row-check" name="course_ids[]" value="<?php echo $c['id']; ?>" aria-label="Chọn <?php echo htmlspecialchars($c['title']); ?>"></td>
-                                        <td style="padding: 12px 16px; display: flex; align-items: center; gap: 12px;">
-                                            <img src="<?php echo htmlspecialchars($c['thumbnail'] ?: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=600'); ?>" style="width: 60px; aspect-ratio: 16/9; object-fit: cover; border-radius: 4px; border: 1px solid var(--border);">
-                                            <strong><?php echo htmlspecialchars($c['title']); ?></strong>
+                                        <td>
+                                            <div class="admin-course-cell">
+                                                <img src="<?php echo htmlspecialchars($c['thumbnail'] ?: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=600'); ?>" alt="<?php echo htmlspecialchars($c['title']); ?>">
+                                                <strong class="admin-course-title"><?php echo htmlspecialchars($c['title']); ?></strong>
+                                            </div>
                                         </td>
                                         <td style="padding: 12px 16px; color: var(--text-muted);"><?php echo htmlspecialchars($c['category']); ?></td>
                                         <td style="padding: 12px 16px; font-weight: 700; color: var(--primary);">
@@ -431,15 +539,18 @@ if ($action === 'list') {
                                                     : '<span style="background-color:#f1f5f9;color:var(--text-muted);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">Bản nháp</span>';
                                             ?>
                                         </td>
-                                        <td style="padding: 12px 16px; text-align: center; display: flex; gap: 8px; justify-content: center;">
-                                            <a href="courses.php?action=view&id=<?php echo $c['id']; ?>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;">Xem</a>
-                                            <a href="courses.php?action=edit&id=<?php echo $c['id']; ?>" class="btn btn-outline" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;">Sửa</a>
-                                            <a href="courses.php?action=delete&id=<?php echo $c['id']; ?>" class="btn btn-danger" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;" data-confirm="Bạn có chắc chắn muốn xóa khóa học này và toàn bộ bài học của nó?">Xóa</a>
+                                        <td style="text-align: center;">
+                                            <div class="admin-course-actions">
+                                                <a href="courses.php?action=view&id=<?php echo $c['id']; ?>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;">Xem</a>
+                                                <a href="courses.php?action=edit&id=<?php echo $c['id']; ?>" class="btn btn-outline" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;">Sửa</a>
+                                                <a href="courses.php?action=delete&id=<?php echo $c['id']; ?>" class="btn btn-danger" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;" data-confirm="Bạn có chắc chắn muốn xóa khóa học này và toàn bộ bài học của nó?">Xóa</a>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
+                        </div>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>

@@ -433,14 +433,20 @@ if (isset($_GET['success'])) {
         .admin-lesson-view-media {
             min-width: 0;
             display: flex;
-            align-items: flex-start;
+            align-items: stretch;
+            padding: 22px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-main);
         }
 
         .admin-lesson-view-media > iframe,
         .admin-lesson-view-media > video,
         .admin-lesson-view-media > div {
             width: 100%;
+            min-height: 100%;
             margin: 0;
+            align-self: stretch;
         }
 
         .admin-lesson-view-info {
@@ -481,6 +487,270 @@ if (isset($_GET['success'])) {
             margin-top: 18px;
         }
 
+
+
+        .admin-lesson-quiz-view {
+            margin-top: 24px;
+            padding: 28px;
+        }
+
+        .admin-lesson-quiz-view-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 18px;
+            align-items: flex-start;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 22px;
+        }
+
+        .admin-lesson-quiz-view-head h2 {
+            margin: 0 0 8px;
+            color: var(--text-main);
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .admin-lesson-quiz-view-head p {
+            margin: 0;
+            color: var(--text-muted);
+            line-height: 1.65;
+        }
+
+        .admin-lesson-quiz-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .admin-lesson-quiz-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 30px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: var(--bg-main);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .admin-lesson-quiz-badge.is-on {
+            background: #d1fae5;
+            color: var(--success);
+            border-color: #a7f3d0;
+        }
+
+        .admin-lesson-quiz-badge.is-off {
+            background: #f1f5f9;
+            color: var(--text-muted);
+        }
+
+        .admin-lesson-quiz-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 2%;
+            margin-bottom: 22px;
+        }
+
+        .admin-lesson-quiz-summary > div {
+            min-width: 0;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-main);
+        }
+
+        .admin-lesson-quiz-summary strong {
+            display: block;
+            color: var(--text-main);
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .admin-lesson-quiz-summary span {
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .admin-lesson-quiz-view-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .admin-lesson-quiz-view-question {
+            padding: 18px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: #ffffff;
+        }
+
+        .admin-lesson-quiz-view-question h3 {
+            margin: 0 0 12px;
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 800;
+            line-height: 1.5;
+        }
+
+        .admin-lesson-quiz-view-options {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .admin-lesson-quiz-view-options li {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            min-width: 0;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-main);
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .admin-lesson-quiz-view-options li.is-correct {
+            border-color: #86efac;
+            background: #dcfce7;
+            color: #166534;
+            font-weight: 700;
+        }
+
+        .admin-lesson-quiz-empty {
+            padding: 22px;
+            border: 1px dashed var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-main);
+            color: var(--text-muted);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .admin-lesson-quiz-empty a {
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .admin-lessons-table-card {
+            overflow: hidden;
+        }
+
+        .admin-lessons-table-wrap {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .admin-lessons-table {
+            width: 100%;
+            max-width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .admin-lessons-table th,
+        .admin-lessons-table td {
+            padding: 11px 10px !important;
+            vertical-align: middle;
+        }
+
+        .admin-lessons-table th {
+            white-space: nowrap;
+            font-size: 13px;
+        }
+
+        .admin-lessons-table th:nth-child(1),
+        .admin-lessons-table td:nth-child(1) {
+            width: 6% !important;
+            text-align: center;
+        }
+
+        .admin-lessons-table th:nth-child(2),
+        .admin-lessons-table td:nth-child(2) {
+            width: 15%;
+        }
+
+        .admin-lessons-table th:nth-child(3),
+        .admin-lessons-table td:nth-child(3) {
+            width: 16%;
+        }
+
+        .admin-lessons-table th:nth-child(4),
+        .admin-lessons-table td:nth-child(4) {
+            width: 12%;
+        }
+
+        .admin-lessons-table th:nth-child(5),
+        .admin-lessons-table td:nth-child(5) {
+            width: 9%;
+        }
+
+        .admin-lessons-table th:nth-child(6),
+        .admin-lessons-table td:nth-child(6) {
+            width: 9%;
+            white-space: nowrap;
+        }
+
+        .admin-lessons-table th:nth-child(7),
+        .admin-lessons-table td:nth-child(7) {
+            display: none;
+        }
+
+        .admin-lessons-table th:nth-child(8),
+        .admin-lessons-table td:nth-child(8) {
+            width: 11%;
+        }
+
+        .admin-lessons-table th:nth-child(9),
+        .admin-lessons-table td:nth-child(9) {
+            width: 22%;
+        }
+
+        .admin-lessons-title,
+        .admin-lessons-course-link {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+        }
+
+        .admin-lessons-video-url {
+            display: block;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .admin-lessons-actions {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: nowrap;
+            white-space: normal;
+        }
+
+        .admin-lessons-actions .btn {
+            flex: 0 0 auto;
+            padding: 5px 8px !important;
+            font-size: 11px !important;
+            height: 30px !important;
+        }
         @media (max-width: 900px) {
             .admin-lesson-view-card {
                 padding: 18px;
@@ -490,8 +760,27 @@ if (isset($_GET['success'])) {
                 grid-template-columns: 1fr;
             }
 
+            .admin-lesson-view-media,
             .admin-lesson-view-info {
                 padding: 18px;
+            }
+
+            .admin-lesson-quiz-view {
+                padding: 18px;
+            }
+
+            .admin-lesson-quiz-view-head {
+                display: grid;
+            }
+
+            .admin-lesson-quiz-badges {
+                justify-content: flex-start;
+            }
+
+            .admin-lesson-quiz-summary,
+            .admin-lesson-quiz-view-options {
+                grid-template-columns: 1fr;
+                gap: 12px;
             }
         }
     </style>
@@ -702,11 +991,12 @@ if (isset($_GET['success'])) {
                     </div>
 
                     
-                    <div class="admin-table-card">
+                    <div class="admin-table-card admin-lessons-table-card">
                         <?php if (empty($lessons)): ?>
                             <p style="color: var(--text-muted); font-style: italic; text-align: center; padding: 40px 0;">Không tìm thấy bài giảng phù hợp.</p>
                         <?php else: ?>
-                            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+                            <div class="admin-lessons-table-wrap">
+                                <table class="admin-lessons-table">
                                 <thead>
                                     <tr style="border-bottom: 1px solid var(--border); font-weight: 700; color: var(--text-main); background-color: var(--bg-main);">
                                         <th style="padding: 12px 16px; width: 80px; text-align: center;">Thứ tự</th>
@@ -724,13 +1014,13 @@ if (isset($_GET['success'])) {
                                     <?php foreach ($lessons as $l): ?>
                                         <tr style="border-bottom: 1px solid var(--border); font-weight: 500;">
                                             <td style="padding: 12px 16px; font-weight: 800; color: var(--primary); text-align: center;"><?php echo htmlspecialchars($l['order_index']); ?></td>
-                                            <td style="padding: 12px 16px;"><strong><?php echo htmlspecialchars($l['title']); ?></strong></td>
-                                            <td style="padding: 12px 16px;"><a href="courses.php?action=view&id=<?php echo $l['course_id']; ?>" style="color: var(--primary); font-weight: 700;"><?php echo htmlspecialchars($l['course_title']); ?></a></td>
+                                            <td><strong class="admin-lessons-title"><?php echo htmlspecialchars($l['title']); ?></strong></td>
+                                            <td><a class="admin-lessons-course-link" href="courses.php?action=view&id=<?php echo $l['course_id']; ?>" style="color: var(--primary); font-weight: 700;"><?php echo htmlspecialchars($l['course_title']); ?></a></td>
                                             <td style="padding: 12px 16px; color: var(--text-muted);"><?php echo htmlspecialchars($l['category']); ?></td>
                                             <td style="padding: 12px 16px; color: var(--text-muted);"><?php echo htmlspecialchars($level_labels[$l['level']] ?? $l['level']); ?></td>
                                             <td style="padding: 12px 16px; font-weight: 700; color: var(--text-main); white-space: nowrap;"><?php echo htmlspecialchars($l['duration']); ?> phút</td>
-                                            <td style="padding: 12px 16px; color: var(--text-muted); font-size: 12px; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="<?php echo htmlspecialchars($l['video_url']); ?>">
-                                                <?php echo htmlspecialchars($l['video_url']); ?>
+                                            <td style="color: var(--text-muted); font-size: 12px;" title="<?php echo htmlspecialchars($l['video_url']); ?>">
+                                                <span class="admin-lessons-video-url"><?php echo htmlspecialchars($l['video_url']); ?></span>
                                             </td>
                                             <td style="padding: 12px 16px;">
                                                 <?php 
@@ -739,16 +1029,18 @@ if (isset($_GET['success'])) {
                                                         : '<span style="background-color:#f1f5f9;color:var(--text-muted);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;">Bảo mật</span>';
                                                 ?>
                                             </td>
-                                            <td style="padding: 12px 16px; text-align: center; display: flex; gap: 8px; justify-content: center;">
-                                                <a href="lessons.php?action=view&id=<?php echo $l['id']; ?>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;">Xem</a>
-                                                <a href="lessons.php?action=edit&id=<?php echo $l['id']; ?>" class="btn btn-outline" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;">Sửa</a>
-                                                <a href="lessons.php?action=edit&id=<?php echo $l['id']; ?>#lesson-quiz" class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;">Quiz</a>
-                                                <a href="lessons.php?action=delete&id=<?php echo $l['id']; ?>" class="btn btn-danger" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;" data-confirm="Bạn có chắc chắn muốn xóa bài giảng này?">Xóa</a>
+                                            <td style="text-align: center;">
+                                                <div class="admin-lessons-actions">
+                                                    <a href="lessons.php?action=view&id=<?php echo $l['id']; ?>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;">Xem</a>
+                                                    <a href="lessons.php?action=edit&id=<?php echo $l['id']; ?>" class="btn btn-outline" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;">Sửa</a>
+                                                    <a href="lessons.php?action=delete&id=<?php echo $l['id']; ?>" class="btn btn-danger" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; height: 32px;" data-confirm="Bạn có chắc chắn muốn xóa bài giảng này?">Xóa</a>
+                                                </div>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
-                            </table>
+                                                            </table>
+                            </div>
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
@@ -787,6 +1079,64 @@ if (isset($_GET['success'])) {
                             <a href="lessons.php?action=edit&id=<?php echo $lesson_id; ?>" class="btn btn-primary admin-lesson-view-edit">Sửa bài học</a>
                         </aside>
                     </div>
+                </div>
+
+                <div class="admin-table-card admin-lesson-quiz-view">
+                    <div class="admin-lesson-quiz-view-head">
+                        <div>
+                            <h2>Quiz của bài học</h2>
+                            <p>Xem nhanh quiz, điểm đạt, trạng thái và các câu hỏi đang gắn với bài học này.</p>
+                        </div>
+                        <?php if ($lesson_quiz): ?>
+                            <div class="admin-lesson-quiz-badges">
+                                <span class="admin-lesson-quiz-badge <?php echo $lesson_quiz['active'] ? 'is-on' : 'is-off'; ?>"><?php echo $lesson_quiz['active'] ? 'Đang bật' : 'Đang tắt'; ?></span>
+                                <span class="admin-lesson-quiz-badge">Điểm đạt <?php echo (int) $lesson_quiz['pass_score']; ?>%</span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <?php if ($lesson_quiz): ?>
+                        <div class="admin-lesson-quiz-summary">
+                            <div>
+                                <strong><?php echo htmlspecialchars($lesson_quiz['title']); ?></strong>
+                                <span>Tiêu đề quiz</span>
+                            </div>
+                            <div>
+                                <strong><?php echo count($lesson_quiz_questions); ?></strong>
+                                <span>Số câu hỏi</span>
+                            </div>
+                            <div>
+                                <strong><?php echo (int) $lesson_quiz['pass_score']; ?>%</strong>
+                                <span>Điểm cần đạt</span>
+                            </div>
+                        </div>
+
+                        <?php if (!empty($lesson_quiz['description'])): ?>
+                            <p style="color: var(--text-muted); line-height: 1.7; margin: 0 0 18px;"><?php echo nl2br(htmlspecialchars($lesson_quiz['description'])); ?></p>
+                        <?php endif; ?>
+
+                        <?php if (empty($lesson_quiz_questions)): ?>
+                            <div class="admin-lesson-quiz-empty">Quiz này chưa có câu hỏi. <a href="lessons.php?action=edit&id=<?php echo $lesson_id; ?>#lesson-quiz">Thêm câu hỏi</a></div>
+                        <?php else: ?>
+                            <div class="admin-lesson-quiz-view-list">
+                                <?php foreach ($lesson_quiz_questions as $question): ?>
+                                    <div class="admin-lesson-quiz-view-question">
+                                        <h3><?php echo (int) $question['order_index']; ?>. <?php echo htmlspecialchars($question['question_text']); ?></h3>
+                                        <ul class="admin-lesson-quiz-view-options">
+                                            <?php foreach (($lesson_quiz_options[(int) $question['id']] ?? []) as $option): ?>
+                                                <li class="<?php echo $option['is_correct'] ? 'is-correct' : ''; ?>">
+                                                    <span><?php echo $option['is_correct'] ? 'Đúng' : '•'; ?></span>
+                                                    <span><?php echo htmlspecialchars($option['option_text']); ?></span>
+                                                </li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <div class="admin-lesson-quiz-empty">Bài học này chưa có quiz. <a href="lessons.php?action=edit&id=<?php echo $lesson_id; ?>#lesson-quiz">Tạo quiz cho bài học</a></div>
+                    <?php endif; ?>
                 </div>
             <?php endif; ?>
 
