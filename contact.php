@@ -111,7 +111,10 @@ require_once __DIR__ . '/includes/header.php';
 
 <style>
     .contact-page {
-        background: linear-gradient(180deg, #f8fafc 0%, var(--bg-main) 48%, #eef2ff 100%);
+        background:
+            radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.16), transparent 28%),
+            radial-gradient(circle at 88% 14%, rgba(16, 185, 129, 0.14), transparent 26%),
+            linear-gradient(180deg, #f8fafc 0%, #eef2ff 48%, #ecfeff 100%);
         min-height: 80vh;
         padding: 58px 0 72px;
     }
@@ -123,8 +126,13 @@ require_once __DIR__ . '/includes/header.php';
 
     .contact-hero {
         width: min(100%, 780px);
-        margin: 0 auto 36px;
+        margin: 0 auto 38px;
         text-align: center;
+        padding: 28px 4%;
+        border: 1px solid rgba(37, 99, 235, 0.12);
+        border-radius: var(--radius-md);
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
     }
 
     .contact-hero span,
@@ -132,8 +140,8 @@ require_once __DIR__ . '/includes/header.php';
     .contact-process-head span {
         display: inline-flex;
         width: fit-content;
-        color: var(--primary);
-        background: rgba(37, 99, 235, 0.1);
+        color: #1d4ed8;
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(16, 185, 129, 0.12));
         border-radius: 999px;
         padding: 7px 13px;
         font-size: 12px;
@@ -176,14 +184,14 @@ require_once __DIR__ . '/includes/header.php';
         flex-direction: column;
         gap: 28px;
         padding: 34px;
-        background: var(--bg-card);
-        border: 1px solid var(--border);
+        background: linear-gradient(160deg, #ffffff 0%, #eff6ff 100%);
+        border: 1px solid rgba(37, 99, 235, 0.16);
         color: var(--text-main);
     }
 
     .contact-info-intro span {
-        color: var(--primary);
-        background: rgba(37, 99, 235, 0.1);
+        color: #1d4ed8;
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(16, 185, 129, 0.12));
     }
 
     .contact-info-intro h2,
@@ -216,9 +224,9 @@ require_once __DIR__ . '/includes/header.php';
         gap: 14px;
         align-items: start;
         padding: 16px;
-        border: 1px solid var(--border);
+        border: 1px solid rgba(37, 99, 235, 0.12);
         border-radius: var(--radius-sm);
-        background: linear-gradient(135deg, rgba(37, 99, 235, 0.07), rgba(124, 58, 237, 0.05));
+        background: rgba(255, 255, 255, 0.78);
     }
 
     .contact-icon {
@@ -227,8 +235,8 @@ require_once __DIR__ . '/includes/header.php';
         border-radius: 12px;
         display: grid;
         place-items: center;
-        background: var(--primary-light);
-        color: var(--primary);
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        color: #ffffff;
     }
 
     .contact-icon svg {
@@ -262,8 +270,8 @@ require_once __DIR__ . '/includes/header.php';
         align-content: start;
         gap: 28px;
         padding: 34px;
-        background: var(--bg-card);
-        border: 1px solid var(--border);
+        background: linear-gradient(160deg, #ffffff 0%, #f0fdf4 100%);
+        border: 1px solid rgba(16, 185, 129, 0.18);
     }
 
     .contact-process-head h2 {
@@ -289,9 +297,9 @@ require_once __DIR__ . '/includes/header.php';
         gap: 18px;
         align-items: start;
         padding: 20px;
-        border: 1px solid var(--border);
+        border: 1px solid rgba(16, 185, 129, 0.16);
         border-radius: var(--radius-sm);
-        background: linear-gradient(135deg, rgba(37, 99, 235, 0.07), rgba(124, 58, 237, 0.06));
+        background: rgba(255, 255, 255, 0.78);
     }
 
     .contact-step {
@@ -300,8 +308,9 @@ require_once __DIR__ . '/includes/header.php';
         border-radius: 16px;
         display: grid;
         place-items: center;
-        background: #111827;
+        background: linear-gradient(135deg, #111827, #334155);
         color: #ffffff;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
         font-size: 15px;
         font-weight: 900;
     }
@@ -328,14 +337,17 @@ require_once __DIR__ . '/includes/header.php';
     .contact-support-card {
         min-width: 0;
         padding: 24px;
-        background: var(--bg-card);
-        border: 1px solid var(--border);
+        background: linear-gradient(160deg, #ffffff 0%, #f0fdf4 100%);
+        border: 1px solid rgba(16, 185, 129, 0.18);
     }
 
     .contact-support-card svg {
         width: 26px;
         height: 26px;
-        color: var(--primary);
+        color: #ffffff;
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        border-radius: 14px;
+        padding: 10px;
         margin-bottom: 14px;
     }
 
@@ -350,6 +362,54 @@ require_once __DIR__ . '/includes/header.php';
         line-height: 1.6;
     }
 
+
+    .contact-info-item:nth-child(2) .contact-icon {
+        background: linear-gradient(135deg, #7c3aed, #ec4899);
+    }
+
+    .contact-info-item:nth-child(3) .contact-icon {
+        background: linear-gradient(135deg, #f59e0b, #ef4444);
+    }
+
+    .contact-info-item:nth-child(4) .contact-icon {
+        background: linear-gradient(135deg, #10b981, #0891b2);
+    }
+
+    .contact-support-card:nth-child(1) {
+        background: linear-gradient(160deg, #eff6ff 0%, #ffffff 100%);
+    }
+
+    .contact-support-card:nth-child(2) {
+        background: linear-gradient(160deg, #fff7ed 0%, #ffffff 100%);
+    }
+
+    .contact-support-card:nth-child(2) svg {
+        background: linear-gradient(135deg, #f59e0b, #ef4444);
+    }
+
+    .contact-support-card:nth-child(3) {
+        background: linear-gradient(160deg, #f0fdf4 0%, #ffffff 100%);
+    }
+
+    .contact-support-card:nth-child(3) svg {
+        background: linear-gradient(135deg, #10b981, #0891b2);
+    }
+
+    .contact-info-card,
+    .contact-process-card,
+    .contact-support-card,
+    .contact-info-item,
+    .contact-process-item {
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .contact-info-item:hover,
+    .contact-process-item:hover,
+    .contact-support-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 34px rgba(15, 23, 42, 0.1);
+        border-color: rgba(37, 99, 235, 0.26);
+    }
     @media (max-width: 920px) {
         .contact-layout,
         .contact-support-grid {
@@ -370,6 +430,7 @@ require_once __DIR__ . '/includes/header.php';
         .contact-hero {
             margin-bottom: 26px;
             text-align: left;
+            padding: 7%;
         }
 
         .contact-hero h1 {
